@@ -277,7 +277,7 @@ export default class Song extends Component {
           width={800}
           height={512}
           ref={(c) => { this.canvas = c; }}
-        />;
+        />
         <button
           className="react-music-button"
           type="button"
