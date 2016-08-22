@@ -1,0 +1,50 @@
+.react-music-canvas {
+  display: block;
+  margin: 30px auto 0;
+  border: 1px solid #aaa;
+  padding: 10px;
+}
+
+.react-music-button {
+  display: block;
+  text-decoration: none;
+  background-color: #f7f7f7;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#e7e7e7));
+  background-image: -webkit-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -moz-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -ms-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -o-linear-gradient(top, #f7f7f7, #e7e7e7);
+  color: #a7a7a7;
+  margin: 30px auto;
+  width: 108px;
+  height: 108px;
+  position: relative;
+  text-align: center;
+  line-height: 108px;
+  border-radius: 50%;
+  box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+  border: solid 1px transparent;
+  outline: none;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.react-music-button:before {
+  content: "";
+  display: block;
+  background: #fff;
+  border-top: 2px solid #ddd;
+  position: absolute;
+  top: -9px;
+  left: -9px;
+  bottom: -9px;
+  right: -9px;
+  z-index: -1;
+  border-radius: 50%;
+  box-shadow: inset 0px 8px 48px #ddd;
+}
+
+.react-music-button:active {
+  box-shadow: none;
+  border: solid 1px #a7a7a7;
+}
