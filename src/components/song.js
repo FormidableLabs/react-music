@@ -1,9 +1,9 @@
 /* eslint-disable no-loop-func */
 import React, { Component, PropTypes } from 'react';
-import { BufferLoader } from '../utils/buffer-loader';
 import WebAudioScheduler from 'web-audio-scheduler';
 import parser from 'note-parser';
 import Envelope from 'envelope-generator';
+import { BufferLoader } from '../utils/buffer-loader';
 
 import './song.css';
 
@@ -113,10 +113,8 @@ export default class Song extends Component {
       );
 
       bufferLoader.load();
-    } else {
-      if (this.props.autoplay) {
-        this.scheduler.start(this.loop);
-      }
+    } else if (this.props.autoplay) {
+      this.scheduler.start(this.loop);
     }
   }
   buffersLoaded(bufferList) {
@@ -266,7 +264,7 @@ export default class Song extends Component {
       this.scheduler.start(this.loop);
     }
     this.setState({
-      playing: this.state.playing !== true
+      playing: this.state.playing !== true,
     });
   }
   render() {
