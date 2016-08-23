@@ -16,7 +16,7 @@
 
 ## Get Started
 
-The easiest way to get started is to clone this repo and run `npm start`. The demo song will be running at [http://localhost:3000](http://localhost:3000). You can open up the `/demo/index.js` file and edit your song there, using the API below as reference.
+The easiest way to get started is to clone this repo and run `npm install && npm start`. The demo song will be running at [http://localhost:3000](http://localhost:3000). You can open up the `/demo/index.js` file and edit your song there, using the API below as reference.
 
 That said, you can import the primitives yourself and run your own build setup, but be aware that hot reloading doesn't work, and runtime prop changes don't propogate yet.
 
