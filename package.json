@@ -4,8 +4,10 @@
   "description": "Make beats with react",
   "main": "lib/index.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --port 3000 --content-base public/",
+    "start": "webpack-dev-server --inline --port 3000 --config webpack.config.dev.js --content-base public/",
     "build": "babel src -d lib --copy-files",
+    "clean": "rimraf dist",
+    "dist": "npm run clean && webpack && cp -a public/. dist/",
     "lint": "eslint . --fix"
   },
   "author": "Ken Wheeler",
@@ -13,7 +15,6 @@
   "repository": "https://github.com/FormidableLabs/react-music",
   "dependencies": {
     "envelope-generator": "^3.0.0",
-    "freeverb": "^1.0.2",
     "note-parser": "^2.0.0",
     "web-audio-scheduler": "^1.1.0"
   },
@@ -39,6 +40,7 @@
     "postcss-loader": "^0.10.1",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "rimraf": "^2.5.4",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.15.0"

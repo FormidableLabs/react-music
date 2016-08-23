@@ -6,17 +6,17 @@ ReactDOM.render(
   <Song tempo={180}>
     <Sequencer resolution={16} bars={2}>
       <Sampler
-        sample="/samples/kick.wav"
+        sample="samples/kick.wav"
         steps={[0, 4, 14]}
       />
       <Sampler
-        sample="/samples/snare.wav"
+        sample="samples/snare.wav"
         steps={[8, 24]}
       />
     </Sequencer>
     <Sequencer resolution={16} bars={4}>
       <Sampler
-        sample="/samples/hihat.wav"
+        sample="samples/hihat.wav"
         steps={[
           0, 4, 8, 12, 16, 20, 24, 28,
           32, 36, 40, 44, 48, 52, 56, 60,

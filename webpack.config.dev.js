@@ -6,25 +6,27 @@ module.exports = {
     './demo/index',
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: __dirname,
     filename: 'bundle.js',
-    publicPath: '/dist/',
+    publicPath: '/',
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production'),
-      },
-    }),
+    new webpack.NoErrorsPlugin(),
   ],
   module: {
     loaders: [{
       test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel',
+      loaders: ['babel'],
+      include: [
+        path.join(__dirname, 'src'),
+        path.join(__dirname, 'demo'),
+      ],
     }, {
       test: /\.css$/,
+      include: [
+        path.join(__dirname, 'src'),
+        path.join(__dirname, 'demo'),
+      ],
       loader: 'style!css!postcss',
     }],
   },
