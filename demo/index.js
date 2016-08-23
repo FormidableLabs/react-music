@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Song, Sequencer, Sampler, Synth } from '../src';
 
 ReactDOM.render(
-  <Song tempo={180}>
+  <Song tempo={190}>
     <Sequencer resolution={16} bars={2}>
       <Sampler
         sample="samples/kick.wav"
