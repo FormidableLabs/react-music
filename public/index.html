@@ -7,5 +7,14 @@
   <body>
     <div id='root'></div>
     <script src="bundle.js"></script>
+	<script>
+    	var button = document.getElementById("play-button");
+	    button.focus();
+	    document.body.onkeydown = function(e){
+	    	if(e.keyCode == 32) {
+	    		button.playToggle();
+	    	}
+	    }
+    </script>
   </body>
 </html>
