@@ -56,7 +56,7 @@ export default class Demo extends Component {
               <Compressor>
                 <Sampler
                   sample="samples/kick.wav"
-                  steps={[0, 2, 4, 16]}
+                  steps={[0, 4, 16]}
                 />
                 <Sampler
                   sample="samples/snare.wav"

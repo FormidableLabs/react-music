@@ -9,12 +9,20 @@
     <script src="bundle.js"></script>
 	<script>
     	var button = document.getElementById("play-button");
+
+		// Focus on button
 	    button.focus();
 
-	    document.body.onkeydown = function(e){
+	    // playToggle() is called when spacebar is pressed
+	    document.onkeydown = function(e){
 	    	if(e.keyCode == 32) {
 	    		button.playToggle();
 	    	}
+	    }
+
+	    //Clicking off button will refocus on button
+	    button.onblur = function(e){
+	    	setTimeout(function() {button.focus()}, 10);
 	    }
     </script>
   </body>
