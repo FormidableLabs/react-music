@@ -56,7 +56,7 @@ export default class Demo extends Component {
               <Compressor>
                 <Sampler
                   sample="samples/kick.wav"
-                  steps={[0, 4, 16]}
+                  steps={[0, 2, 4, 16]}
                 />
                 <Sampler
                   sample="samples/snare.wav"
@@ -67,29 +67,6 @@ export default class Demo extends Component {
                   steps={[0, 4, 8, 12, 16, 20, 24, 28]}
                 />
               </Compressor>
-            </Sequencer>
-            <Sequencer
-              resolution={16}
-              bars={4}
-            >
-              <Synth
-                type="sine"
-                gain={0}
-                steps={[
-                  [0, 1, ['d1']],
-                  [4, 1, ['d1']],
-                  [8, 1, ['f1']],
-                  [12, 1, ['g1']],
-                  [16, 1, ['a1']],
-                  [20, 1, ['d1']],
-                  [32, 1, ['d1']],
-                  [33, 1, ['d1']],
-                  [34, 1, ['d1']],
-                  [40, 1, ['f1']],
-                  [44, 1, ['f1']],
-                  [48, 1, ['d1']],
-                ]}
-              />
             </Sequencer>
           </Analyser>
         </Song>
@@ -104,7 +81,9 @@ export default class Demo extends Component {
         <button
           className="react-music-button"
           type="button"
+          id="play-button"
           onClick={this.playToggle}
+          autofocus
         >
           {this.state.playing ? 'Stop' : 'Play'}
         </button>
