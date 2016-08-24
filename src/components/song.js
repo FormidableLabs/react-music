@@ -33,7 +33,7 @@ export default class Song extends Component {
 
     const { tempo, children: seqChildren } = this.props;
 
-    const beatInterval = 60000 / tempo;
+    const beatInterval = 30000 / tempo;
 
     this.barInterval = beatInterval * 4;
 
