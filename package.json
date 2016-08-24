@@ -14,9 +14,10 @@
   "license": "MIT",
   "repository": "https://github.com/FormidableLabs/react-music",
   "dependencies": {
+    "audio-contour": "0.0.1",
     "envelope-generator": "^3.0.0",
     "note-parser": "^2.0.0",
-    "web-audio-scheduler": "^1.1.0"
+    "react-addons-create-fragment": "^15.3.1"
   },
   "peerDependencies": {
     "react": "^15.2.1",
