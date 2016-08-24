@@ -1,21 +1,18 @@
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
+import Tuna from 'tunajs';
 
-export default class Compressor extends Component {
+export default class MoogFilter extends Component {
   static propTypes = {
     children: PropTypes.node,
-    threshold: PropTypes.number,
-    knee: PropTypes.number,
-    ratio: PropTypes.number,
-    attack: PropTypes.number,
-    release: PropTypes.number,
+    cutoff: PropTypes.number,
+    resonance: PropTypes.number,
+    bufferSize: PropTypes.number,
   };
   static defaultProps = {
-    threshold: -24,
-    knee: 32,
-    ratio: 12,
-    attack: 0.003,
-    release: 0.25,
+    cutoff: 0.065,
+    resonance: 3.5,
+    bufferSize: 4096,
   };
   static contextTypes = {
     audioContext: PropTypes.object,
@@ -28,10 +25,15 @@ export default class Compressor extends Component {
   constructor(props, context) {
     super(props);
 
-    this.connectNode = context.audioContext.createDynamicsCompressor();
-    this.connectNode.connect(context.connectNode);
+    const tuna = new Tuna(context.audioContext);
 
-    this.applyProps = this.applyProps.bind(this);
+    this.connectNode = new tuna.MoogFilter({
+      cutoff: props.cutoff,
+      resonance: props.resonance,
+      bufferSize: props.bufferSize,
+    });
+
+    this.connectNode.connect(context.connectNode);
   }
   getChildContext() {
     return {
@@ -39,18 +41,8 @@ export default class Compressor extends Component {
       connectNode: this.connectNode,
     };
   }
-  componentDidMount() {
-    this.applyProps(this.props);
-  }
   componentWillUnmount() {
     this.connectNode.disconnect();
-  }
-  applyProps(props) {
-    for (const prop in props) {
-      if (this.connectNode[prop]) {
-        this.connectNode[prop].value = props[prop];
-      }
-    }
   }
   render() {
     return <span>{this.props.children}</span>;

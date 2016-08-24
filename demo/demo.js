@@ -1,5 +1,25 @@
 import React, { Component } from 'react';
-import { Analyser, Compressor, Song, Sequencer, Sampler, Synth } from '../src';
+
+import {
+  Analyser,
+  Bitcrusher,
+  Chorus,
+  Compressor,
+  Delay,
+  Filter,
+  MoogFilter,
+  Overdrive,
+  Phaser,
+  PingPong,
+  Reverb,
+  Song,
+  Sequencer,
+  Sampler,
+  Synth,
+} from '../src';
+
+import Polysynth from './polysynth';
+import Visualization from './visualization';
 
 import './index.css';
 
@@ -14,27 +34,8 @@ export default class Demo extends Component {
     this.audioProcess = this.audioProcess.bind(this);
     this.playToggle = this.playToggle.bind(this);
   }
-  componentDidMount() {
-    this.ctx = this.canvas.getContext('2d');
-  }
   audioProcess(analyser) {
-    if (this.ctx) {
-      const gradient = this.ctx.createLinearGradient(0, 0, 0, 512);
-      gradient.addColorStop(1, '#000000');
-      gradient.addColorStop(0.75, '#2ecc71');
-      gradient.addColorStop(0.25, '#f1c40f');
-      gradient.addColorStop(0, '#e74c3c');
-
-      const array = new Uint8Array(analyser.frequencyBinCount);
-      analyser.getByteFrequencyData(array);
-      this.ctx.clearRect(0, 0, 800, 512);
-      this.ctx.fillStyle = gradient;
-
-      for (let i = 0; i < (array.length); i++) {
-        const value = array[i];
-        this.ctx.fillRect(i * 12, 512, 10, value * -2);
-      }
-    }
+    this.visualization.audioProcess(analyser);
   }
   playToggle() {
     this.setState({
@@ -46,60 +47,64 @@ export default class Demo extends Component {
       <div>
         <Song
           playing={this.state.playing}
-          tempo={190}
+          tempo={90}
         >
           <Analyser onAudioProcess={this.audioProcess}>
             <Sequencer
               resolution={16}
-              bars={2}
+              bars={1}
             >
-              <Compressor>
-                <Sampler
-                  sample="samples/kick.wav"
-                  steps={[0, 4, 16]}
-                />
-                <Sampler
-                  sample="samples/snare.wav"
-                  steps={[8, 24]}
-                />
-                <Sampler
-                  sample="samples/hihat.wav"
-                  steps={[0, 4, 8, 12, 16, 20, 24, 28]}
-                />
-              </Compressor>
+              <Sampler
+                sample="samples/kick.wav"
+                steps={[0, 2, 8, 10]}
+              />
+              <Sampler
+                sample="samples/snare.wav"
+                steps={[4, 12]}
+              />
             </Sequencer>
             <Sequencer
               resolution={16}
-              bars={4}
+              bars={2}
+            >
+              <Polysynth
+                type="sine"
+                steps={[
+                  [0, 1, ['c3', 'd#3', 'g3']],
+                  [2, 1, ['c4']],
+                  [8, 1, ['c3', 'd#3', 'g3']],
+                  [10, 1, ['c4']],
+                  [12, 1, ['c3', 'd#3', 'g3']],
+                  [14, 1, ['d#4']],
+                  [16, 1, ['f3', 'g#3', 'c4']],
+                  [18, 1, ['f3', 'g#3', 'c4']],
+                  [24, 1, ['f3', 'g#3', 'c4']],
+                  [26, 1, ['f3', 'g#3', 'c4']],
+                  [28, 1, ['f3', 'g#3', 'c4']],
+                  [30, 1, ['f3', 'g#3', 'c4']],
+                ]}
+              />
+            </Sequencer>
+            <Sequencer
+              resolution={16}
+              bars={2}
             >
               <Synth
+                gain={1}
                 type="sine"
-                gain={0}
                 steps={[
-                  [0, 1, ['d1']],
-                  [4, 1, ['d1']],
-                  [8, 1, ['f1']],
-                  [12, 1, ['g1']],
-                  [16, 1, ['a1']],
-                  [20, 1, ['d1']],
-                  [32, 1, ['d1']],
-                  [33, 1, ['d1']],
-                  [34, 1, ['d1']],
-                  [40, 1, ['f1']],
-                  [44, 1, ['f1']],
-                  [48, 1, ['d1']],
+                  [0, 8, ['c2']],
+                  [8, 4, ['c2']],
+                  [12, 4, ['d#2']],
+                  [16, 8, ['f2']],
+                  [24, 8, ['f1']],
                 ]}
               />
             </Sequencer>
           </Analyser>
         </Song>
 
-        <canvas
-          className="react-music-canvas"
-          width={800}
-          height={512}
-          ref={(c) => { this.canvas = c; }}
-        />
+        <Visualization ref={(c) => { this.visualization = c; }} />
 
         <button
           className="react-music-button"

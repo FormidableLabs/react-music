@@ -1,4 +1,6 @@
 import React, { PropTypes, Component } from 'react';
+import uuid from 'uuid';
+
 import { BufferLoader } from '../utils/buffer-loader';
 
 export default class Sampler extends Component {
@@ -18,25 +20,25 @@ export default class Sampler extends Component {
     barInterval: PropTypes.number,
     bufferLoaded: PropTypes.func,
     connectNode: PropTypes.object,
-    registerBuffer: PropTypes.func,
-    registerInstrument: PropTypes.func,
+    getMaster: PropTypes.func,
     resolution: PropTypes.number,
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
-    totalBars: PropTypes.number,
   };
-  constructor(props, context) {
+  constructor(props) {
     super(props);
 
     this.buffer = null;
     this.bufferLoaded = this.bufferLoaded.bind(this);
     this.getSteps = this.getSteps.bind(this);
     this.playStep = this.playStep.bind(this);
-
-    context.registerInstrument(this.getSteps);
   }
   componentDidMount() {
-    this.context.registerBuffer();
+    this.id = uuid.v1();
+
+    const master = this.context.getMaster();
+    master.instruments[this.id] = this.getSteps;
+    master.buffers[this.id] = 1;
 
     const bufferLoader = new BufferLoader(
       this.context.audioContext,
@@ -46,8 +48,15 @@ export default class Sampler extends Component {
 
     bufferLoader.load();
   }
+  componentWillUnmount() {
+    const master = this.context.getMaster();
+
+    delete master.buffers[this.id];
+    delete master.instruments[this.id];
+  }
   getSteps(playbackTime) {
-    const loopCount = this.context.totalBars / this.context.bars;
+    const totalBars = this.context.getMaster().getMaxBars();
+    const loopCount = totalBars / this.context.bars;
     for (let i = 0; i < loopCount; i++) {
       const barOffset = ((this.context.barInterval * this.context.bars) * i) / 1000;
       const stepInterval = this.context.barInterval / this.context.resolution;
@@ -75,6 +84,8 @@ export default class Sampler extends Component {
   }
   bufferLoaded([buffer]) {
     this.buffer = buffer;
+    const master = this.context.getMaster();
+    delete master.buffers[this.id];
     this.context.bufferLoaded();
   }
   render() {

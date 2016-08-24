@@ -1,21 +1,22 @@
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
+import Tuna from 'tunajs';
 
-export default class Compressor extends Component {
+export default class Overdrive extends Component {
   static propTypes = {
     children: PropTypes.node,
-    threshold: PropTypes.number,
-    knee: PropTypes.number,
-    ratio: PropTypes.number,
-    attack: PropTypes.number,
-    release: PropTypes.number,
+    outputGain: PropTypes.number,
+    drive: PropTypes.number,
+    curveAmount: PropTypes.number,
+    algorithmIndex: PropTypes.number,
+    bypass: PropTypes.number,
   };
   static defaultProps = {
-    threshold: -24,
-    knee: 32,
-    ratio: 12,
-    attack: 0.003,
-    release: 0.25,
+    outputGain: 0.5,
+    drive: 0.7,
+    curveAmount: 1,
+    algorithmIndex: 0,
+    bypass: 0,
   };
   static contextTypes = {
     audioContext: PropTypes.object,
@@ -28,10 +29,17 @@ export default class Compressor extends Component {
   constructor(props, context) {
     super(props);
 
-    this.connectNode = context.audioContext.createDynamicsCompressor();
-    this.connectNode.connect(context.connectNode);
+    const tuna = new Tuna(context.audioContext);
 
-    this.applyProps = this.applyProps.bind(this);
+    this.connectNode = new tuna.Overdrive({
+      outputGain: props.outputGain,
+      drive: props.drive,
+      curveAmount: props.curveAmount,
+      algorithmIndex: props.algorithmIndex,
+      bypass: props.bypass,
+    });
+
+    this.connectNode.connect(context.connectNode);
   }
   getChildContext() {
     return {
@@ -39,18 +47,8 @@ export default class Compressor extends Component {
       connectNode: this.connectNode,
     };
   }
-  componentDidMount() {
-    this.applyProps(this.props);
-  }
   componentWillUnmount() {
     this.connectNode.disconnect();
-  }
-  applyProps(props) {
-    for (const prop in props) {
-      if (this.connectNode[prop]) {
-        this.connectNode[prop].value = props[prop];
-      }
-    }
   }
   render() {
     return <span>{this.props.children}</span>;

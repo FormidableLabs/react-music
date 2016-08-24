@@ -17,12 +17,9 @@ export default class Song extends Component {
     barInterval: PropTypes.number,
     bufferLoaded: PropTypes.func,
     connectNode: PropTypes.object,
-    registerBars: PropTypes.func,
-    registerBuffer: PropTypes.func,
-    registerInstrument: PropTypes.func,
+    getMaster: PropTypes.func,
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
-    totalBars: PropTypes.number,
   };
   constructor(props) {
     super(props);
@@ -31,16 +28,16 @@ export default class Song extends Component {
       buffersLoaded: false,
     };
 
-    this.bufferCount = 0;
-    this.bars = 1;
     this.barInterval = (60000 / props.tempo) * 4;
-    this.instrumentCallbacks = [];
+    this.bars = {};
+    this.buffers = {};
+    this.instruments = {};
+    this.busses = {};
 
     this.loop = this.loop.bind(this);
-    this.registerBars = this.registerBars.bind(this);
-    this.registerBuffer = this.registerBuffer.bind(this);
-    this.registerInstrument = this.registerInstrument.bind(this);
     this.bufferLoaded = this.bufferLoaded.bind(this);
+    this.getMaster = this.getMaster.bind(this);
+    this.getMaxBars = this.getMaxBars.bind(this);
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     this.audioContext = new AudioContext();
@@ -56,11 +53,8 @@ export default class Song extends Component {
       barInterval: this.barInterval,
       bufferLoaded: this.bufferLoaded,
       connectNode: this.audioContext.destination,
-      registerBuffer: this.registerBuffer, // make dynamic
-      registerBars: this.registerBars,
-      registerInstrument: this.registerInstrument, // make dynamic
+      getMaster: this.getMaster,
       scheduler: this.scheduler,
-      totalBars: this.bars, // Make dynamic
     };
   }
   componentDidMount() {
@@ -82,30 +76,26 @@ export default class Song extends Component {
       }
     }
   }
+  getMaster() {
+    return this;
+  }
+  getMaxBars() {
+    return Math.max.apply(Math, Object.keys(this.bars).map((b) => this.bars[b]));
+  }
   bufferLoaded() {
-    this.bufferCount--;
-    if (this.bufferCount === 0) {
+    if (Object.keys(this.buffers).length === 0) {
       this.setState({
         buffersLoaded: true,
       });
     }
   }
   loop(e) {
-    this.instrumentCallbacks.forEach((callback) => {
+    const maxBars = Object.keys(this.bars).length ? this.getMaxBars() : 1;
+    Object.keys(this.instruments).forEach((id) => {
+      const callback = this.instruments[id];
       callback(e.playbackTime);
     });
-    this.scheduler.insert(e.playbackTime + ((this.barInterval * this.bars) / 1000), this.loop);
-  }
-  registerBars(bars) {
-    if (bars > this.bars) {
-      this.bars = bars;
-    }
-  }
-  registerBuffer() {
-    this.bufferCount++;
-  }
-  registerInstrument(callback) {
-    this.instrumentCallbacks.push(callback);
+    this.scheduler.insert(e.playbackTime + ((this.barInterval * maxBars) / 1000), this.loop);
   }
   render() {
     return <span>{this.props.children}</span>;

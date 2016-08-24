@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import parser from 'note-parser';
 import contour from 'audio-contour';
+import uuid from 'uuid';
 
 export default class Synth extends Component {
   static displayName = 'Synth';
@@ -13,6 +14,7 @@ export default class Synth extends Component {
       release: PropTypes.number,
     }),
     gain: PropTypes.number,
+    transpose: PropTypes.number,
     type: PropTypes.string.isRequired,
     steps: PropTypes.array.isRequired,
   };
@@ -23,35 +25,40 @@ export default class Synth extends Component {
       sustain: 0.2,
       release: 0.2,
     },
+    transpose: 0,
     gain: 0.5,
   };
   static contextTypes = {
     audioContext: PropTypes.object,
     bars: PropTypes.number,
     barInterval: PropTypes.number,
-    bufferLoaded: PropTypes.func,
     connectNode: PropTypes.object,
-    registerBuffer: PropTypes.func,
-    registerInstrument: PropTypes.func,
+    getMaster: PropTypes.func,
     resolution: PropTypes.number,
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
-    totalBars: PropTypes.number,
   };
   constructor(props, context) {
     super(props);
 
     this.getSteps = this.getSteps.bind(this);
     this.playStep = this.playStep.bind(this);
-
-    context.registerInstrument(this.getSteps);
+  }
+  componentDidMount() {
+    this.id = uuid.v1();
+    const master = this.context.getMaster();
+    master.instruments[this.id] = this.getSteps;
+  }
+  componentWillUnmount() {
+    const master = this.context.getMaster();
+    delete master.instruments[this.id];
   }
   getSteps(playbackTime) {
-    const loopCount = this.context.totalBars / this.context.bars;
+    const totalBars = this.context.getMaster().getMaxBars();
+    const loopCount = totalBars / this.context.bars;
     for (let i = 0; i < loopCount; i++) {
       const barOffset = ((this.context.barInterval * this.context.bars) * i) / 1000;
       const stepInterval = this.context.barInterval / this.context.resolution;
-
       this.props.steps.forEach((step) => {
         const time = barOffset + ((step[0] * stepInterval) / 1000);
 
@@ -63,9 +70,13 @@ export default class Synth extends Component {
     }
   }
   createOscillator(time, note, duration) {
+    const volumeGain = this.context.audioContext.createGain();
+    volumeGain.gain.value = this.props.gain;
+    volumeGain.connect(this.context.connectNode);
 
-    const gain = this.context.audioContext.createGain();
-    gain.connect(this.context.connectNode);
+    const amplitudeGain = this.context.audioContext.createGain();
+    amplitudeGain.gain.value = 0;
+    amplitudeGain.connect(volumeGain);
 
     const env = contour(this.context.audioContext, {
       attack: this.props.envelope.attack,
@@ -73,12 +84,16 @@ export default class Synth extends Component {
       sustain: this.props.envelope.sustain,
       release: this.props.envelope.release,
     });
-    env.connect(gain.gain);
+
+    env.connect(amplitudeGain.gain);
 
     const osc = this.context.audioContext.createOscillator();
-    osc.frequency.value = parser.freq(note);
+    const transposed = note.slice(0, -1) +
+      (parseInt(note[note.length - 1], 0) + parseInt(this.props.transpose, 0));
+
+    osc.frequency.value = parser.freq(transposed);
     osc.type = this.props.type;
-    osc.connect(gain);
+    osc.connect(amplitudeGain);
 
     osc.start(time);
     env.start(time);

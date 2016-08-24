@@ -1,17 +1,19 @@
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
 
-export default class Sequencer extends Component {
+export default class Filter extends Component {
   static propTypes = {
     children: PropTypes.node,
-    smoothingTimeConstant: PropTypes.number,
-    fftSize: PropTypes.number,
-    onAudioProcess: PropTypes.func,
+    frequency: PropTypes.number,
+    Q: PropTypes.number,
+    gain: PropTypes.number,
+    type: PropTypes.string,
   };
   static defaultProps = {
-    smoothingTimeConstant: 0.3,
-    fftSize: 128,
-    onAudioProcess: () => {},
+    frequency: 2000,
+    Q: 0,
+    gain: 0,
+    type: 'lowpass',
   };
   static contextTypes = {
     audioContext: PropTypes.object,
@@ -24,16 +26,10 @@ export default class Sequencer extends Component {
   constructor(props, context) {
     super(props);
 
-    this.visualization = context.audioContext.createScriptProcessor(2048, 1, 1);
-    this.visualization.connect(context.audioContext.destination);
-
-    this.connectNode = context.audioContext.createAnalyser();
+    this.connectNode = context.audioContext.createBiquadFilter();
     this.connectNode.connect(context.connectNode);
-    this.applyProps = this.applyProps.bind(this);
 
-    this.visualization.onaudioprocess = () => {
-      props.onAudioProcess(this.connectNode);
-    };
+    this.applyProps = this.applyProps.bind(this);
   }
   getChildContext() {
     return {
@@ -50,7 +46,11 @@ export default class Sequencer extends Component {
   applyProps(props) {
     for (const prop in props) {
       if (this.connectNode[prop]) {
-        this.connectNode[prop] = props[prop];
+        if (typeof this.connectNode[prop] === 'object') {
+          this.connectNode[prop].value = props[prop];
+        } else {
+          this.connectNode[prop] = props[prop];
+        }
       }
     }
   }

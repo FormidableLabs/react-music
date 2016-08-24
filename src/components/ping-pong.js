@@ -1,21 +1,20 @@
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
+import Tuna from 'tunajs';
 
-export default class Compressor extends Component {
+export default class PingPong extends Component {
   static propTypes = {
     children: PropTypes.node,
-    threshold: PropTypes.number,
-    knee: PropTypes.number,
-    ratio: PropTypes.number,
-    attack: PropTypes.number,
-    release: PropTypes.number,
+    wetLevel: PropTypes.number,
+    feedback: PropTypes.number,
+    delayTimeLeft: PropTypes.number,
+    delayTimeRight: PropTypes.number,
   };
   static defaultProps = {
-    threshold: -24,
-    knee: 32,
-    ratio: 12,
-    attack: 0.003,
-    release: 0.25,
+    wetLevel: 0.5,
+    feedback: 0.3,
+    delayTimeLeft: 150,
+    delayTimeRight: 200,
   };
   static contextTypes = {
     audioContext: PropTypes.object,
@@ -28,10 +27,16 @@ export default class Compressor extends Component {
   constructor(props, context) {
     super(props);
 
-    this.connectNode = context.audioContext.createDynamicsCompressor();
-    this.connectNode.connect(context.connectNode);
+    const tuna = new Tuna(context.audioContext);
 
-    this.applyProps = this.applyProps.bind(this);
+    this.connectNode = new tuna.PingPongDelay({
+      wetLevel: props.wetLevel,
+      feedback: props.feedback,
+      delayTimeLeft: props.delayTimeLeft,
+      delayTimeRight: props.delayTimeRight,
+    });
+
+    this.connectNode.connect(context.connectNode);
   }
   getChildContext() {
     return {
@@ -39,18 +44,8 @@ export default class Compressor extends Component {
       connectNode: this.connectNode,
     };
   }
-  componentDidMount() {
-    this.applyProps(this.props);
-  }
   componentWillUnmount() {
     this.connectNode.disconnect();
-  }
-  applyProps(props) {
-    for (const prop in props) {
-      if (this.connectNode[prop]) {
-        this.connectNode[prop].value = props[prop];
-      }
-    }
   }
   render() {
     return <span>{this.props.children}</span>;
