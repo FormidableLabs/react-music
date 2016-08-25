@@ -4,6 +4,6 @@
   "browser": true
 "rules":
   "no-magic-numbers": 0
-  "comma-dangle": [2, "always"]
+  "comma-dangle": [2, "always-multiline"]
   "jsx-quotes": [2, "prefer-double"]
   "quotes": [2, "single",{"allowTemplateLiterals": true}]

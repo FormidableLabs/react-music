@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component, } from 'react';
+import React, { PropTypes, Component } from 'react';
 
 export default class Sequencer extends Component {
   static propTypes = {
@@ -43,6 +43,9 @@ export default class Sequencer extends Component {
   }
   componentDidMount() {
     this.applyProps(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.applyProps(nextProps);
   }
   componentWillUnmount() {
     this.connectNode.disconnect();

@@ -1,4 +1,4 @@
-import React, { PropTypes, Component, } from 'react';
+import React, { PropTypes, Component } from 'react';
 
 export default class Synth extends Component {
   static displayName = 'Synth';
@@ -32,6 +32,7 @@ export default class Synth extends Component {
   }
   componentWillUnmount() {
     this.osc.stop();
+    this.connectNode.disconnect();
   }
   render() {
     return <span>{this.props.children}</span>;

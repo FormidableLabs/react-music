@@ -1,4 +1,4 @@
-import React, { Component, } from 'react';
+import React, { Component } from 'react';
 
 export default class Visualization extends Component {
   constructor(props) {

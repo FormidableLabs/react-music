@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component, } from 'react';
+import React, { PropTypes, Component } from 'react';
 import Tuna from 'tunajs';
 
 export default class Reverb extends Component {
@@ -52,6 +52,13 @@ export default class Reverb extends Component {
       ...this.context,
       connectNode: this.connectNode,
     };
+  }
+  componentWillReceiveProps(nextProps) {
+    for (const prop in nextProps) {
+      if (this.connectNode[prop]) {
+        this.connectNode[prop] = nextProps[prop];
+      }
+    }
   }
   componentWillUnmount() {
     this.connectNode.disconnect();

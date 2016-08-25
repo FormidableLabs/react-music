@@ -1,38 +1,29 @@
-/* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
-import Tuna from 'tunajs';
 
-export default class MoogFilter extends Component {
+export default class Bus extends Component {
   static propTypes = {
-    bufferSize: PropTypes.number,
     children: PropTypes.node,
-    cutoff: PropTypes.number,
-    resonance: PropTypes.number,
+    gain: PropTypes.number,
+    id: PropTypes.string.isRequired,
   };
   static defaultProps = {
-    bufferSize: 4096,
-    cutoff: 0.065,
-    resonance: 3.5,
+    gain: 0.5,
   };
   static contextTypes = {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
+    getMaster: PropTypes.func,
   };
   static childContextTypes = {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
+    getMaster: PropTypes.func,
   };
   constructor(props, context) {
     super(props);
 
-    const tuna = new Tuna(context.audioContext);
-
-    this.connectNode = new tuna.MoogFilter({
-      cutoff: props.cutoff,
-      resonance: props.resonance,
-      bufferSize: props.bufferSize,
-    });
-
+    this.connectNode = context.audioContext.createGain();
+    this.connectNode.gain.value = props.gain;
     this.connectNode.connect(context.connectNode);
   }
   getChildContext() {
@@ -41,15 +32,20 @@ export default class MoogFilter extends Component {
       connectNode: this.connectNode,
     };
   }
+  componentDidMount() {
+    const master = this.context.getMaster();
+    master.busses[this.props.id] = this.connectNode;
+  }
   componentWillReceiveProps(nextProps) {
-    for (const prop in nextProps) {
-      if (this.connectNode[prop]) {
-        this.connectNode[prop] = nextProps[prop];
-      }
-    }
+    const master = this.context.getMaster();
+    delete master.busses[this.props.id];
+
+    this.connectNode.gain.value = nextProps.gain;
+    master.busses[nextProps.id] = this.connectNode;
   }
   componentWillUnmount() {
     this.connectNode.disconnect();
+    delete this.context.getMaster().busses[this.props.id];
   }
   render() {
     return <span>{this.props.children}</span>;

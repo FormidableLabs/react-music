@@ -1,18 +1,12 @@
-/* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
-import Tuna from 'tunajs';
 
-export default class MoogFilter extends Component {
+export default class Gain extends Component {
   static propTypes = {
-    bufferSize: PropTypes.number,
+    amount: PropTypes.number,
     children: PropTypes.node,
-    cutoff: PropTypes.number,
-    resonance: PropTypes.number,
   };
   static defaultProps = {
-    bufferSize: 4096,
-    cutoff: 0.065,
-    resonance: 3.5,
+    amount: 0.0,
   };
   static contextTypes = {
     audioContext: PropTypes.object,
@@ -25,14 +19,8 @@ export default class MoogFilter extends Component {
   constructor(props, context) {
     super(props);
 
-    const tuna = new Tuna(context.audioContext);
-
-    this.connectNode = new tuna.MoogFilter({
-      cutoff: props.cutoff,
-      resonance: props.resonance,
-      bufferSize: props.bufferSize,
-    });
-
+    this.connectNode = context.audioContext.createGain();
+    this.connectNode.gain.value = props.amount;
     this.connectNode.connect(context.connectNode);
   }
   getChildContext() {
@@ -42,11 +30,7 @@ export default class MoogFilter extends Component {
     };
   }
   componentWillReceiveProps(nextProps) {
-    for (const prop in nextProps) {
-      if (this.connectNode[prop]) {
-        this.connectNode[prop] = nextProps[prop];
-      }
-    }
+    this.connectNode.gain.value = nextProps.amount;
   }
   componentWillUnmount() {
     this.connectNode.disconnect();

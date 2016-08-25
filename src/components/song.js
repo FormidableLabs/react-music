@@ -1,5 +1,5 @@
 /* eslint-disable no-loop-func, react/no-did-mount-set-state */
-import React, { Component, PropTypes, } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Scheduler from '../utils/scheduler';
 
 export default class Song extends Component {
@@ -63,6 +63,9 @@ export default class Song extends Component {
         buffersLoaded: true,
       });
     }
+  }
+  componentWillReceiveProps(nextProps) {
+    this.barInterval = (60000 / nextProps.tempo) * 4;
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.buffersLoaded !== this.state.buffersLoaded ||

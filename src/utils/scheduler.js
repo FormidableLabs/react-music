@@ -47,7 +47,7 @@ export default class Scheduler {
 
   insert(time, callback, args) {
     const id = ++this.scheduleID;
-    const event = { id, time, callback, args, };
+    const event = { id, time, callback, args };
 
     if (this.schedules.length === 0 || this.schedules[this.schedules.length - 1].time <= time) {
       this.schedules.push(event);
@@ -94,7 +94,7 @@ export default class Scheduler {
 
       this.playbackTime = playbackTime;
 
-      event.callback({ playbackTime, args, });
+      event.callback({ playbackTime, args });
     }
 
     this.playbackTime = t0;

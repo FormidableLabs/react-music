@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component, } from 'react';
+import React, { PropTypes, Component } from 'react';
 
 export default class Filter extends Component {
   static propTypes = {
@@ -39,6 +39,13 @@ export default class Filter extends Component {
   }
   componentDidMount() {
     this.applyProps(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    for (const prop in nextProps) {
+      if (this.connectNode[prop]) {
+        this.connectNode[prop] = nextProps[prop];
+      }
+    }
   }
   componentWillUnmount() {
     this.connectNode.disconnect();

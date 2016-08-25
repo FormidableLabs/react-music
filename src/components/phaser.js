@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component, } from 'react';
+import React, { PropTypes, Component } from 'react';
 import Tuna from 'tunajs';
 
 export default class Phaser extends Component {
@@ -26,7 +26,7 @@ export default class Phaser extends Component {
   };
   static childContextTypes = {
     audioContext: PropTypes.object,
-    connectNode: PropTypes.object, };
+    connectNode: PropTypes.object };
   constructor(props, context) {
     super(props);
 
@@ -48,6 +48,13 @@ export default class Phaser extends Component {
       ...this.context,
       connectNode: this.connectNode,
     };
+  }
+  componentWillReceiveProps(nextProps) {
+    for (const prop in nextProps) {
+      if (this.connectNode[prop]) {
+        this.connectNode[prop] = nextProps[prop];
+      }
+    }
   }
   componentWillUnmount() {
     this.connectNode.disconnect();
