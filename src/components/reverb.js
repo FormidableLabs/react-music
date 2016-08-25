@@ -1,26 +1,26 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 import Tuna from 'tunajs';
 
 export default class Reverb extends Component {
   static propTypes = {
-    children: PropTypes.node,
-    highCut: PropTypes.number,
-    lowCut: PropTypes.number,
-    dryLevel: PropTypes.number,
-    wetLevel: PropTypes.number,
-    level: PropTypes.number,
-    impulse: PropTypes.string,
     bypass: PropTypes.number,
+    children: PropTypes.node,
+    dryLevel: PropTypes.number,
+    highCut: PropTypes.number,
+    impulse: PropTypes.string,
+    level: PropTypes.number,
+    lowCut: PropTypes.number,
+    wetLevel: PropTypes.number,
   };
   static defaultProps = {
-    highCut: 22050,
-    lowCut: 20,
-    dryLevel: 1,
-    wetLevel: 1,
-    level: 1,
-    impulse: 'reverb/room.wav',
     bypass: 0,
+    dryLevel: 1,
+    highCut: 22050,
+    impulse: 'reverb/room.wav',
+    level: 1,
+    lowCut: 20,
+    wetLevel: 1,
   };
   static contextTypes = {
     audioContext: PropTypes.object,

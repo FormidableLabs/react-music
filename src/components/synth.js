@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 import parser from 'note-parser';
 import contour from 'audio-contour';
 import uuid from 'uuid';
@@ -14,9 +14,9 @@ export default class Synth extends Component {
       release: PropTypes.number,
     }),
     gain: PropTypes.number,
+    steps: PropTypes.array.isRequired,
     transpose: PropTypes.number,
     type: PropTypes.string.isRequired,
-    steps: PropTypes.array.isRequired,
   };
   static defaultProps = {
     envelope: {
@@ -25,10 +25,20 @@ export default class Synth extends Component {
       sustain: 0.2,
       release: 0.2,
     },
-    transpose: 0,
     gain: 0.5,
+    transpose: 0,
   };
   static contextTypes = {
+    audioContext: PropTypes.object,
+    bars: PropTypes.number,
+    barInterval: PropTypes.number,
+    connectNode: PropTypes.object,
+    getMaster: PropTypes.func,
+    resolution: PropTypes.number,
+    scheduler: PropTypes.object,
+    tempo: PropTypes.number,
+  };
+  static childContextTypes = {
     audioContext: PropTypes.object,
     bars: PropTypes.number,
     barInterval: PropTypes.number,
@@ -43,6 +53,16 @@ export default class Synth extends Component {
 
     this.getSteps = this.getSteps.bind(this);
     this.playStep = this.playStep.bind(this);
+
+    this.connectNode = context.audioContext.createGain();
+    this.connectNode.gain.value = props.gain;
+    this.connectNode.connect(context.connectNode);
+  }
+  getChildContext() {
+    return {
+      ...this.context,
+      connectNode: this.connectNode,
+    };
   }
   componentDidMount() {
     this.id = uuid.v1();
@@ -70,13 +90,9 @@ export default class Synth extends Component {
     }
   }
   createOscillator(time, note, duration) {
-    const volumeGain = this.context.audioContext.createGain();
-    volumeGain.gain.value = this.props.gain;
-    volumeGain.connect(this.context.connectNode);
-
     const amplitudeGain = this.context.audioContext.createGain();
     amplitudeGain.gain.value = 0;
-    amplitudeGain.connect(volumeGain);
+    amplitudeGain.connect(this.connectNode);
 
     const env = contour(this.context.audioContext, {
       attack: this.props.envelope.attack,
@@ -102,7 +118,7 @@ export default class Synth extends Component {
     osc.stop(finish);
   }
   playStep(e) {
-    const { step, time } = e.args;
+    const { step, time, } = e.args;
     const notes = step[2];
     const stepInterval = this.context.barInterval / this.context.resolution;
     const duration = (step[1] * stepInterval) / 1000;

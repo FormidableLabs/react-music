@@ -1,7 +1,7 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 import uuid from 'uuid';
 
-import { BufferLoader } from '../utils/buffer-loader';
+import { BufferLoader, } from '../utils/buffer-loader';
 
 export default class Sampler extends Component {
   static displayName = 'Sampler';
@@ -42,7 +42,7 @@ export default class Sampler extends Component {
 
     const bufferLoader = new BufferLoader(
       this.context.audioContext,
-      [this.props.sample],
+      [this.props.sample, ],
       this.bufferLoaded
     );
 
@@ -82,7 +82,7 @@ export default class Sampler extends Component {
       source.disconnect();
     });
   }
-  bufferLoaded([buffer]) {
+  bufferLoaded([buffer, ]) {
     this.buffer = buffer;
     const master = this.context.getMaster();
     delete master.buffers[this.id];

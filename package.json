@@ -8,7 +8,7 @@
     "build": "babel src -d lib --copy-files",
     "clean": "rimraf dist",
     "dist": "npm run clean && webpack && cp -a public/. dist/",
-    "lint": "eslint . --fix"
+    "lint": "eslint src demo --fix"
   },
   "author": "Ken Wheeler",
   "license": "MIT",
@@ -35,7 +35,8 @@
     "babel-preset-stage-0": "^6.5.0",
     "css-loader": "^0.23.1",
     "eslint": "^3.3.1",
-    "eslint-config-airbnb": "^10.0.1",
+    "eslint-config-formidable": "^1.0.1",
+    "eslint-plugin-filenames": "^1.1.0",
     "eslint-plugin-import": "^1.14.0",
     "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.1.2",

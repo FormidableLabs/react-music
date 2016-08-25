@@ -1,21 +1,21 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 
 export default class Compressor extends Component {
   static propTypes = {
+    attack: PropTypes.number,
     children: PropTypes.node,
-    threshold: PropTypes.number,
     knee: PropTypes.number,
     ratio: PropTypes.number,
-    attack: PropTypes.number,
     release: PropTypes.number,
+    threshold: PropTypes.number,
   };
   static defaultProps = {
-    threshold: -24,
+    attack: 0.003,
     knee: 32,
     ratio: 12,
-    attack: 0.003,
     release: 0.25,
+    threshold: -24,
   };
   static contextTypes = {
     audioContext: PropTypes.object,

@@ -1,17 +1,17 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 
 export default class Sequencer extends Component {
   static propTypes = {
     children: PropTypes.node,
-    smoothingTimeConstant: PropTypes.number,
     fftSize: PropTypes.number,
     onAudioProcess: PropTypes.func,
+    smoothingTimeConstant: PropTypes.number,
   };
   static defaultProps = {
-    smoothingTimeConstant: 0.3,
     fftSize: 128,
     onAudioProcess: () => {},
+    smoothingTimeConstant: 0.3,
   };
   static contextTypes = {
     audioContext: PropTypes.object,

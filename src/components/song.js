@@ -1,12 +1,12 @@
 /* eslint-disable no-loop-func, react/no-did-mount-set-state */
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes, } from 'react';
 import Scheduler from '../utils/scheduler';
 
 export default class Song extends Component {
   static propTypes = {
+    children: PropTypes.node,
     playing: PropTypes.bool,
     tempo: PropTypes.number,
-    children: PropTypes.node,
   };
   static defaultProps = {
     playing: false,
@@ -58,7 +58,7 @@ export default class Song extends Component {
     };
   }
   componentDidMount() {
-    if (this.bufferCount === 0) {
+    if (Object.keys(this.buffers).length === 0) {
       this.setState({
         buffersLoaded: true,
       });
@@ -80,7 +80,7 @@ export default class Song extends Component {
     return this;
   }
   getMaxBars() {
-    return Math.max.apply(Math, Object.keys(this.bars).map((b) => this.bars[b]));
+    return Math.max(...Object.keys(this.bars).map((b) => this.bars[b]));
   }
   bufferLoaded() {
     if (Object.keys(this.buffers).length === 0) {

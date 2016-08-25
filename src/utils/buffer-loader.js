@@ -1,30 +1,30 @@
 /* eslint-disable no-console */
-export function BufferLoader(context, urlList, callback) {
+export const BufferLoader = function BufferLoader(context, urlList, callback) {
   this.context = context;
   this.urlList = urlList;
   this.onload = callback;
   this.bufferList = [];
   this.loadCount = 0;
-}
+};
 
 BufferLoader.prototype.loadBuffer = function loadBuffer(url, index) {
   const request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.responseType = 'arraybuffer';
 
-  const loader = this;
+  const self = this;
 
   request.onload = function onload() {
-    loader.context.decodeAudioData(
+    self.context.decodeAudioData(
       request.response,
       (buffer) => {
         if (!buffer) {
           console.error(`error decoding file data: ${url}`);
           return;
         }
-        loader.bufferList[index] = buffer;
-        if (++loader.loadCount === loader.urlList.length) {
-          loader.onload(loader.bufferList);
+        self.bufferList[index] = buffer;
+        if (++self.loadCount === self.urlList.length) {
+          self.onload(self.bufferList);
         }
       },
       (error) => {

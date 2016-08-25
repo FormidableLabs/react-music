@@ -1,8 +1,9 @@
-"extends": "airbnb"
+"extends": "formidable/configurations/es6-react"
 "parser": "babel-eslint"
 "env":
   "browser": true
 "rules":
-  "import/no-extraneous-dependencies": 0
-  "import/prefer-default-export": 0
-  "react/jsx-filename-extension": [2, { "extensions": [".js"] }]
+  "no-magic-numbers": 0
+  "comma-dangle": [2, "always"]
+  "jsx-quotes": [2, "prefer-double"]
+  "quotes": [2, "single",{"allowTemplateLiterals": true}]

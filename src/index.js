@@ -4,6 +4,7 @@ import Chorus from './components/chorus.js';
 import Compressor from './components/compressor.js';
 import Delay from './components/delay.js';
 import Filter from './components/filter.js';
+import LFO from './components/lfo.js';
 import MoogFilter from './components/moog-filter.js';
 import Overdrive from './components/overdrive.js';
 import Phaser from './components/phaser.js';
@@ -21,6 +22,7 @@ export {
   Compressor,
   Delay,
   Filter,
+  LFO,
   MoogFilter,
   Overdrive,
   Phaser,

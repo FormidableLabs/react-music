@@ -1,16 +1,16 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 
 import uuid from 'uuid';
 
 export default class Sequencer extends Component {
   static propTypes = {
-    resolution: PropTypes.number,
     bars: PropTypes.number,
     children: PropTypes.node,
+    resolution: PropTypes.number,
   };
   static defaultProps = {
-    resolution: 16,
     bars: 1,
+    resolution: 16,
   };
   static contextTypes = {
     getMaster: PropTypes.func,

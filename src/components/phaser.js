@@ -1,24 +1,24 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 import Tuna from 'tunajs';
 
 export default class Phaser extends Component {
   static propTypes = {
-    children: PropTypes.node,
-    rate: PropTypes.number,
-    depth: PropTypes.number,
-    feedback: PropTypes.number,
-    stereoPhase: PropTypes.number,
     baseModulationFrequency: PropTypes.number,
     bypass: PropTypes.number,
+    children: PropTypes.node,
+    depth: PropTypes.number,
+    feedback: PropTypes.number,
+    rate: PropTypes.number,
+    stereoPhase: PropTypes.number,
   };
   static defaultProps = {
-    rate: 1.2,
-    depth: 0.3,
-    feedback: 0.2,
-    stereoPhase: 30,
     baseModulationFrequency: 700,
     bypass: 0,
+    depth: 0.3,
+    feedback: 0.2,
+    rate: 1.2,
+    stereoPhase: 30,
   };
   static contextTypes = {
     audioContext: PropTypes.object,
@@ -26,7 +26,7 @@ export default class Phaser extends Component {
   };
   static childContextTypes = {
     audioContext: PropTypes.object,
-    connectNode: PropTypes.object,  };
+    connectNode: PropTypes.object, };
   constructor(props, context) {
     super(props);
 

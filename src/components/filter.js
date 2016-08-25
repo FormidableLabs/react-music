@@ -1,17 +1,17 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 
 export default class Filter extends Component {
   static propTypes = {
+    Q: PropTypes.number,
     children: PropTypes.node,
     frequency: PropTypes.number,
-    Q: PropTypes.number,
     gain: PropTypes.number,
     type: PropTypes.string,
   };
   static defaultProps = {
-    frequency: 2000,
     Q: 0,
+    frequency: 2000,
     gain: 0,
     type: 'lowpass',
   };

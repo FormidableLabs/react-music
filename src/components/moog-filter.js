@@ -1,18 +1,18 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 import Tuna from 'tunajs';
 
 export default class MoogFilter extends Component {
   static propTypes = {
+    bufferSize: PropTypes.number,
     children: PropTypes.node,
     cutoff: PropTypes.number,
     resonance: PropTypes.number,
-    bufferSize: PropTypes.number,
   };
   static defaultProps = {
+    bufferSize: 4096,
     cutoff: 0.065,
     resonance: 3.5,
-    bufferSize: 4096,
   };
   static contextTypes = {
     audioContext: PropTypes.object,

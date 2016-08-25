@@ -1,20 +1,9 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, } from 'react';
 
 import {
-  Analyser,
-  Bitcrusher,
-  Chorus,
-  Compressor,
   Delay,
-  Filter,
   MoogFilter,
-  Overdrive,
-  Phaser,
-  PingPong,
   Reverb,
-  Song,
-  Sequencer,
-  Sampler,
   Synth,
 } from '../src';
 

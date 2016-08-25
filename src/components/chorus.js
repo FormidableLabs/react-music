@@ -1,20 +1,20 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 import Tuna from 'tunajs';
 
 export default class Chorus extends Component {
   static propTypes = {
-    children: PropTypes.node,
-    rate: PropTypes.number,
-    feedback: PropTypes.number,
-    delay: PropTypes.number,
     bypass: PropTypes.number,
+    children: PropTypes.node,
+    delay: PropTypes.number,
+    feedback: PropTypes.number,
+    rate: PropTypes.number,
   };
   static defaultProps = {
-    rate: 1.5,
-    feedback: 0.2,
-    delay: 0.0045,
     bypass: 0,
+    delay: 0.0045,
+    feedback: 0.2,
+    rate: 1.5,
   };
   static contextTypes = {
     audioContext: PropTypes.object,

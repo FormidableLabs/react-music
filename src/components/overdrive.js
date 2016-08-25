@@ -1,22 +1,22 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 import Tuna from 'tunajs';
 
 export default class Overdrive extends Component {
   static propTypes = {
-    children: PropTypes.node,
-    outputGain: PropTypes.number,
-    drive: PropTypes.number,
-    curveAmount: PropTypes.number,
     algorithmIndex: PropTypes.number,
     bypass: PropTypes.number,
+    children: PropTypes.node,
+    curveAmount: PropTypes.number,
+    drive: PropTypes.number,
+    outputGain: PropTypes.number,
   };
   static defaultProps = {
-    outputGain: 0.5,
-    drive: 0.7,
-    curveAmount: 1,
     algorithmIndex: 0,
     bypass: 0,
+    curveAmount: 1,
+    drive: 0.7,
+    outputGain: 0.5,
   };
   static contextTypes = {
     audioContext: PropTypes.object,

@@ -1,20 +1,20 @@
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, } from 'react';
 import Tuna from 'tunajs';
 
 export default class PingPong extends Component {
   static propTypes = {
     children: PropTypes.node,
-    wetLevel: PropTypes.number,
-    feedback: PropTypes.number,
     delayTimeLeft: PropTypes.number,
     delayTimeRight: PropTypes.number,
+    feedback: PropTypes.number,
+    wetLevel: PropTypes.number,
   };
   static defaultProps = {
-    wetLevel: 0.5,
-    feedback: 0.3,
     delayTimeLeft: 150,
     delayTimeRight: 200,
+    feedback: 0.3,
+    wetLevel: 0.5,
   };
   static contextTypes = {
     audioContext: PropTypes.object,
