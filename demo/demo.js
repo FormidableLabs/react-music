@@ -101,6 +101,20 @@ export default class Demo extends Component {
                 ]}
               />
             </Sequencer>
+              <Compressor>
+                <Sampler
+                  sample="samples/kick.wav"
+                  steps={[0, 4, 16]}
+                />
+                <Sampler
+                  sample="samples/snare.wav"
+                  steps={[8, 24]}
+                />
+                <Sampler
+                  sample="samples/hihat.wav"
+                  steps={[0, 4, 8, 12, 16, 20, 24, 28]}
+                />
+              </Compressor>
           </Analyser>
         </Song>
 
@@ -109,7 +123,9 @@ export default class Demo extends Component {
         <button
           className="react-music-button"
           type="button"
+          id="play-button"
           onClick={this.playToggle}
+          autofocus
         >
           {this.state.playing ? 'Stop' : 'Play'}
         </button>
