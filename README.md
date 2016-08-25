@@ -8,8 +8,6 @@
 
 ![http://i.imgur.com/2t1NPJy.png](http://i.imgur.com/2t1NPJy.png)
 
-> Note: This library is super experimental and alpha. It is the first release of a weekend project. I'll be working to make it better, but the current release is to just let people play around with it.
-
 ## Install
 
 `npm install react-music`
@@ -18,9 +16,9 @@
 
 The easiest way to get started is to clone this repo and run `npm start`. The demo song will be running at [http://localhost:3000](http://localhost:3000). You can open up the `/demo/index.js` file and edit your song there, using the API below as reference.
 
-That said, you can import the primitives yourself and run your own build setup, but be aware that hot reloading doesn't work, and runtime prop changes don't propogate yet.
+That said, you can import the primitives yourself and run your own build setup if you want.
 
-### Basic Concepts
+## Basic Concepts
 
 #### Song
 
@@ -35,7 +33,7 @@ The first thing you want to do is create a `Song` component. This is the control
 #### Sequencer
 
 
-Direct children of `Song` must always be `Sequencer` components. Your `Sequencer`'s are what you use to define a looping section. They take two props. The first `resolution` is the resolution of steps in your sequence array. This defaults to `16`, which is a sixteenth note. The second is `bars` which is how many bars the sequencer sequences before it loops. You can have multiple sequencers in your song, and the main Song loop is based upon the sequencer with the largest number of bars. Here is an example:
+Your `Sequencer`'s are what you use to define a looping section. They take two props. The first `resolution` is the resolution of steps in your sequence array. This defaults to `16`, which is a sixteenth note. The second is `bars` which is how many bars the sequencer sequences before it loops. You can have multiple sequencers in your song, and the main Song loop is based upon the sequencer with the largest number of bars. Here is an example:
 
 ```js
 <Song tempo={90}>
@@ -45,7 +43,9 @@ Direct children of `Song` must always be `Sequencer` components. Your `Sequencer
 </Song>
 ```
 
-Once you have a `Song` and a `Sequencer` component, you can add instruments to your `Sequencer`. Currently, two instruments are provided, `Synth` and `Sampler`. Lets take a look at how these work:
+Once you have a `Song` and a `Sequencer` component, you can add instruments to your `Sequencer`. Lets take a look at how these work:
+
+## Instruments
 
 #### Sampler
 
@@ -61,6 +61,8 @@ The sampler component is used to play audio samples. To use it, you must at very
   </Sequencer>
 </Song>
 ```
+
+You can also provide an array for a step, where the second value is a tuning, from -12 to 12.
 
 #### Synth
 
@@ -80,7 +82,106 @@ The `Synth` component is used to create an oscillator and play it on steps, just
 </Song>
 ```
 
-## Props API
+#### Monosynth
+
+The `Monosynth` component is a `Synth` component, but it only plays one note at a time. Further, it has a `glide` prop that specifies portamento length. So if two notes overlap, the monosynth glides up to the next value on that duration. Check out how:
+
+```js
+<Song tempo={90}>
+  <Sequencer resolution={16} bars={1}>
+    <Monosynth
+      glide={0.5}
+      type="square"
+      steps={[
+        [0, 5, "c3"],
+        [4, 4, "c4"],
+      ]}
+    />
+  </Sequencer>
+</Song>
+```
+
+## Effects
+
+There are a ton of new effects added in 1.0.0. You can compose effect chains by wrapping effects around your instruments. Here is an example of how you would do that:
+
+```js
+<Song tempo={90}>
+  <Sequencer resolution={16} bars={1}>
+    <Reverb>
+      <Delay>
+        <Monosynth
+          steps={[
+            [0, 4, "c3"],
+            [4, 4, "c4"],
+          ]}
+        />
+      </Delay>
+    </Reverb>
+  </Sequencer>
+</Song>
+```
+
+### Effect Busses
+
+If you want to define an effects bus, which is a set of effects that multiple instruments can send their output to, this is achieved with the `Bus` component.
+
+First you want to create a `Bus` component, and give it an identifier:
+
+```js
+<Song tempo={90}>
+  <Bus id="myBus"/>
+</Song>
+```
+
+Next, wrap your bus with the effect chain you want to make available, similarly to the way you would wrap effects around an instrument. You generally want to do this with effects that have wet/dry control, and set the `dryLevel` to 0:
+
+```js
+<Song tempo={90}>
+  <Delay dryValue={0}>
+    <Bus id="myBus"/>
+  </Delay>
+</Song>
+```
+
+Finally, to hook an instrument up to your bus, or several busses, add their id's to the `busses` prop on an instrument:
+
+```js
+<Song tempo={90}>
+  <Delay dryValue={0}>
+    <Bus id="myBus"/>
+  </Delay>
+  <Sampler
+  	busses={['myBus']}
+  	sample='/samples/kick.wav'
+  	steps={[1,4,8,12]}
+  />
+</Song>
+```
+
+## LFO
+
+You know whats bananas? LFO. Thats what. You can use an oscillator to modify properties of your instruments and effects. This is done with the `LFO` component. Any node that you want to apply LFO to just needs it added as a child. Then you define a `connect` prop that returns a function that lets you select a parent AudioNode property to oscillate. See the following example.
+
+```js
+<Song tempo={90}>
+  <Synth
+    type="square"
+    steps={[
+      [0, 2, "c3"],
+      [8, 2, ["c3", "d#3", "f4"]]
+    ]}
+  >
+    <LF0
+      type="sine"
+      frequency={0.05}
+      connect={(c) => c.gain}
+    />	
+  </Synth>
+</Song>
+```
+
+## API
 
 ### Song
 
@@ -163,15 +264,11 @@ compressor={{
 
 - Currently only the 4/4 time signature is supported
 - Hot reloading doesn't work
-- Post mount prop updates don't propagate to the parent song
-- The viz will be decoupled from the `Song` component, with an external API
-- `Synth` components need a filter prop
 - `Synth` presets need to be added
 - Record/Ouput audio file
 - Optional working mixing board alongside viz
-- Monophonic/Polyphonic prop settings and sample trigger modes
-- Note based detuning for Sampler
 - Sampler sample maps
+
 
 ## License
 
