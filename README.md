@@ -8,37 +8,37 @@
 
 ![http://i.imgur.com/2t1NPJy.png](http://i.imgur.com/2t1NPJy.png)
 
-<!-- MarkdownTOC depth=3 -->
+<!-- MarkdownTOC depth=3 autolink=true bracket=round -->
 
-- [Install][Install]
-- [Get Started][Get Started]
-- [Basic Concepts][Basic Concepts]
-- [Instruments][Instruments]
-- [Effects][Effects]
-  - [Effect Busses][Effect Busses]
-- [LFO][LFO]
-- [API][API]
-  - [Top Level][Top Level]
-  - [Intruments][Instruments]
-  - [Effects][Effects]
-  - [Special][Special]
-- [Known Issues & Roadmap][Known Issues  & Roadmap]
-- [License][License]
+- [Install](#install)
+- [Get Started](#get-started)
+- [Basic Concepts](#basic-concepts)
+- [Instruments](#instruments)
+- [Effects](#effects)
+  - [Effect Busses](#effect-busses)
+- [LFO](#lfo)
+- [API](#api)
+  - [Top Level](#top-level)
+  - [Intruments](#intruments)
+  - [Effects](#effects-1)
+  - [Special](#special)
+- [Known Issues & Roadmap](#known-issues--roadmap)
+- [License](#license)
 
 <!-- /MarkdownTOC -->
 
 
-## Install[Install]
+## Install
 
 `npm install react-music`
 
-## Get Started[Get Started]
+## Get Started
 
 The easiest way to get started is to clone this repo and run `npm start`. The demo song will be running at [http://localhost:3000](http://localhost:3000). You can open up the `/demo/index.js` file and edit your song there, using the API below as reference.
 
 That said, you can import the primitives yourself and run your own build setup if you want.
 
-## Basic Concepts[Basic Concepts]
+## Basic Concepts
 
 #### Song
 
@@ -65,7 +65,7 @@ Your `Sequencer`'s are what you use to define a looping section. They take two p
 
 Once you have a `Song` and a `Sequencer` component, you can add instruments to your `Sequencer`. Lets take a look at how these work:
 
-## Instruments[Instruments]
+## Instruments
 
 #### Sampler
 
@@ -121,7 +121,7 @@ The `Monosynth` component is a `Synth` component, but it only plays one note at 
 </Song>
 ```
 
-## Effects[Effects]
+## Effects
 
 There are a ton of new effects added in 1.0.0. You can compose effect chains by wrapping effects around your instruments. Here is an example of how you would do that:
 
@@ -142,7 +142,7 @@ There are a ton of new effects added in 1.0.0. You can compose effect chains by 
 </Song>
 ```
 
-### Effect Busses[Effect Busses]
+### Effect Busses
 
 If you want to define an effects bus, which is a set of effects that multiple instruments can send their output to, this is achieved with the `Bus` component.
 
@@ -179,7 +179,7 @@ Finally, to hook an instrument up to your bus, or several busses, add their id's
 </Song>
 ```
 
-## LFO[LFO]
+## LFO
 
 You know whats bananas? LFO. Thats what. You can use an oscillator to modify properties of your instruments and effects. This is done with the `LFO` component. Any node that you want to apply LFO to just needs it added as a child. Then you define a `connect` prop that returns a function that lets you select a parent AudioNode property to oscillate. See the following example.
 
@@ -201,9 +201,9 @@ You know whats bananas? LFO. Thats what. You can use an oscillator to modify pro
 </Song>
 ```
 
-## API[API]
+## API
 
-### Top Level[Top Level]
+### Top Level
 
 ---
 
@@ -221,7 +221,7 @@ You know whats bananas? LFO. Thats what. You can use an oscillator to modify pro
 
 **resolution** (_number_) : Step resolution for your sequence
 
-### Intruments[Instruments]
+### Intruments
 
 ---
 
@@ -308,7 +308,7 @@ steps={[
 **type** (_string_) : Oscillator type. Accepts `square`, `triangle`, `sawtooth` & `sine`
 
 
-### Effects[Effects]
+### Effects
 
 ---
 
@@ -461,7 +461,7 @@ steps={[
 **wetLevel** (_number_)
 
 
-### Special[Special]
+### Special
 
 ---
 
@@ -494,7 +494,7 @@ steps={[
 **type** (_string_) : Oscillator type. Accepts `square`, `triangle`, `sawtooth` & `sine`
 
 
-## Known Issues & Roadmap[Known Issues  & Roadmap]
+## Known Issues & Roadmap
 
 - Currently only the 4/4 time signature is supported
 - Hot reloading doesn't work
@@ -504,6 +504,6 @@ steps={[
 - Sampler sample maps
 
 
-## License[License]
+## License
 
 [MIT License](http://opensource.org/licenses/MIT)
