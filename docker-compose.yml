@@ -1,0 +1,9 @@
+version: '2'
+services:
+  react-music-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: react-music
+    ports:
+      - 3000:3000
