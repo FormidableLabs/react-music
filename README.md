@@ -8,17 +8,37 @@
 
 ![http://i.imgur.com/2t1NPJy.png](http://i.imgur.com/2t1NPJy.png)
 
-## Install
+<!-- MarkdownTOC depth=3 -->
+
+- [Install][Install]
+- [Get Started][Get Started]
+- [Basic Concepts][Basic Concepts]
+- [Instruments][Instruments]
+- [Effects][Effects]
+  - [Effect Busses][Effect Busses]
+- [LFO][LFO]
+- [API][API]
+  - [Top Level][Top Level]
+  - [Intruments][Instruments]
+  - [Effects][Effects]
+  - [Special][Special]
+- [Known Issues & Roadmap][Known Issues  & Roadmap]
+- [License][License]
+
+<!-- /MarkdownTOC -->
+
+
+## Install[Install]
 
 `npm install react-music`
 
-## Get Started
+## Get Started[Get Started]
 
 The easiest way to get started is to clone this repo and run `npm start`. The demo song will be running at [http://localhost:3000](http://localhost:3000). You can open up the `/demo/index.js` file and edit your song there, using the API below as reference.
 
 That said, you can import the primitives yourself and run your own build setup if you want.
 
-## Basic Concepts
+## Basic Concepts[Basic Concepts]
 
 #### Song
 
@@ -45,7 +65,7 @@ Your `Sequencer`'s are what you use to define a looping section. They take two p
 
 Once you have a `Song` and a `Sequencer` component, you can add instruments to your `Sequencer`. Lets take a look at how these work:
 
-## Instruments
+## Instruments[Instruments]
 
 #### Sampler
 
@@ -84,7 +104,7 @@ The `Synth` component is used to create an oscillator and play it on steps, just
 
 #### Monosynth
 
-The `Monosynth` component is a `Synth` component, but it only plays one note at a time. Further, it has a `glide` prop that specifies portamento length. So if two notes overlap, the monosynth glides up to the next value on that duration. Check out how:
+The `Monosynth` component is a `Synth` component, but it only plays one note at a time. It also has a `glide` prop that specifies portamento length. So if two notes overlap, the monosynth glides up to the next value on that duration. Check out how:
 
 ```js
 <Song tempo={90}>
@@ -101,7 +121,7 @@ The `Monosynth` component is a `Synth` component, but it only plays one note at 
 </Song>
 ```
 
-## Effects
+## Effects[Effects]
 
 There are a ton of new effects added in 1.0.0. You can compose effect chains by wrapping effects around your instruments. Here is an example of how you would do that:
 
@@ -122,7 +142,7 @@ There are a ton of new effects added in 1.0.0. You can compose effect chains by 
 </Song>
 ```
 
-### Effect Busses
+### Effect Busses[Effect Busses]
 
 If you want to define an effects bus, which is a set of effects that multiple instruments can send their output to, this is achieved with the `Bus` component.
 
@@ -159,7 +179,7 @@ Finally, to hook an instrument up to your bus, or several busses, add their id's
 </Song>
 ```
 
-## LFO
+## LFO[LFO]
 
 You know whats bananas? LFO. Thats what. You can use an oscillator to modify properties of your instruments and effects. This is done with the `LFO` component. Any node that you want to apply LFO to just needs it added as a child. Then you define a `connect` prop that returns a function that lets you select a parent AudioNode property to oscillate. See the following example.
 
@@ -176,50 +196,98 @@ You know whats bananas? LFO. Thats what. You can use an oscillator to modify pro
       type="sine"
       frequency={0.05}
       connect={(c) => c.gain}
-    />	
+    />
   </Synth>
 </Song>
 ```
 
-## API
+## API[API]
 
-### Song
+### Top Level[Top Level]
 
-**tempo** (_number_) : Your song tempo
+---
+
+#### \<Song />
 
 **autoplay** (_boolean_) : Whether the song should start playing automatically
 
-### Sequencer
+**tempo** (_number_) : Your song tempo
 
-**resolution** (_number_) : Step resolution for your sequence
+--
+
+#### \<Sequencer />
 
 **bars** (_number_) : Number of bars in your sequence
 
-### Sampler
+**resolution** (_number_) : Step resolution for your sequence
 
-**sample** (_number_) : Step resolution for your sequence
+### Intruments[Instruments]
 
-**steps** (_array_) : Array of step indexes for the sample to be played at
+---
 
-**volume** (_number_) : A number (0-100) specifying instrument volume
+#### \<Monosynth />
 
-**detune** (_number_) : A number (in cents) specifying instrument detune
+**busses** (_array_) : An array of `Bus` id strings to send output to
 
-**compressor** (_object_) : An object specifying compressor settings
+**envelope** (_object_) : An object specifying envelope settings
 
 ```js
-compressor={{
-  threshold: -24,
-  knee: 30,
-  ratio: 12,
-  attack: 0.003,
-  release: 0.25,
+envelope={{
+  attack: 0.1,
+  sustain: 0.3,
+  decay: 20,
+  release: 0.5
 }}
 ```
 
-### Synth
+**gain** (_number_) : A number specifying instrument gain
+
+**glide** (_number_) : Portamento length for overlapping notes
+
+**steps** (_array_) : Array of step arrays for the notes to be played at
+
+```js
+steps={[
+  [0, 2, "a2"]
+]}
+```
+
+**transpose** (_number_) : Positive or negative number for transposition of notes
 
 **type** (_string_) : Oscillator type. Accepts `square`, `triangle`, `sawtooth` & `sine`
+
+--
+
+#### \<Sampler />
+
+**busses** (_array_) : An array of `Bus` id strings to send output to
+
+**detune** (_number_) : A number (in cents) specifying instrument detune
+
+**gain** (_number_) : A number specifying instrument gain
+
+**sample** (_number_) : Step resolution for your sequence
+
+**steps** (_array_) : Array of step indexes for the sample to be played at. Accepts arrays for steps in order to provide a second argument for index based detune (in between -12 & 12).
+
+--
+
+#### \<Synth />
+
+**busses** (_array_) : An array of `Bus` id strings to send output to
+
+**envelope** (_object_) : An object specifying envelope settings
+
+```js
+envelope={{
+  attack: 0.1,
+  sustain: 0.3,
+  decay: 20,
+  release: 0.5
+}}
+```
+
+**gain** (_number_) : A number specifying instrument gain
 
 **steps** (_array_) : Array of step arrays for the notes to be played at. Accepts in array in the `[ step, duration, note || [notes] ]` format.
 
@@ -235,32 +303,198 @@ steps={[
 ]}
 ```
 
-**volume** (_number_) : A number (0-100) specifying instrument volume
+**transpose** (_number_) : Positive or negative number for transposition of notes
 
-**envelope** (_object_) : An object specifying envelope settings
+**type** (_string_) : Oscillator type. Accepts `square`, `triangle`, `sawtooth` & `sine`
 
-```js
-envelope={{
-  attack: 0.1,
-  sustain: 0.3,
-  decay: 20,
-  release: 0.5
-}}
-```
 
-**compressor** (_object_) : An object specifying compressor settings
+### Effects[Effects]
 
-```js
-compressor={{
-  threshold: -24,
-  knee: 30,
-  ratio: 12,
-  attack: 0.003,
-  release: 0.25,
-}}
-```
+---
 
-## Known Issues & Roadmap
+#### \<Bitcrusher />
+
+**bits** (_number_)
+
+**bufferSize** (_number_)
+
+**normfreq** (_number_)
+
+
+--
+
+#### \<Chorus />
+
+**bypass** (_number_)
+
+**delay** (_number_)
+
+**feedback** (_number_)
+
+**rate** (_number_)
+
+
+--
+
+#### \<Compressor />
+
+**attack** (_number_)
+
+**knee** (_number_)
+
+**ratio** (_number_)
+
+**release** (_number_)
+
+**threshold** (_number_)
+
+
+--
+
+#### \<Delay />
+
+**bypass** (_number_)
+
+**cutoff** (_number_)
+
+**delayTime** (_number_)
+
+**dryLevel** (_number_)
+
+**feedback** (_number_)
+
+**wetLevel** (_number_)
+
+
+--
+
+#### \<Filter />
+
+**Q** (_number_)
+
+**frequency** (_number_)
+
+**gain** (_number_)
+
+**type** (_string_)
+
+
+--
+
+#### \<Gain />
+
+**amount** (_number_)
+
+
+--
+
+#### \<MoogFilter />
+
+**bufferSize** (_number_)
+
+**cutoff** (_number_)
+
+**resonance** (_number_)
+
+
+--
+
+#### \<Overdrive />
+
+**algorithmIndex** (_number_)
+
+**bypass** (_number_)
+
+**curveAmount** (_number_)
+
+**drive** (_number_)
+
+**outputGain** (_number_)
+
+
+--
+
+#### \<Phaser />
+
+**baseModulationFrequency** (_number_)
+
+**bypass** (_number_)
+
+**depth** (_number_)
+
+**feedback** (_number_)
+
+**rate** (_number_)
+
+**stereoPhase** (_number_)
+
+
+--
+
+#### \<PingPong />
+
+**delayTimeLeft** (_number_)
+
+**delayTimeRight** (_number_)
+
+**feedback** (_number_)
+
+**wetLevel** (_number_)
+
+
+--
+
+#### \<Reverb />
+
+**bypass** (_number_)
+
+**dryLevel** (_number_)
+
+**highCut** (_number_)
+
+**impulse** (_string_)
+
+**level** (_number_)
+
+**lowCut** (_number_)
+
+**wetLevel** (_number_)
+
+
+### Special[Special]
+
+---
+
+#### \<Analyser />
+
+**fftSize** (_number_) : FFT Size value
+
+**onAudioProcess** (_function_) : Callback function with audio processing data
+
+**smoothingTimeConstant** (_number_) : Smoothing time constant
+
+--
+
+#### \<Bus />
+
+**gain** (_number_) : A number specifying Bus gain
+
+**id** (_string_) : Bus ID
+
+--
+
+#### \<LFO />
+
+**connect** (_function_) : LFO property selection function
+
+**frequency** (_number_) : LFO frequency
+
+**gain** (_number_) : A number specifying LFO gain
+
+**type** (_string_) : Oscillator type. Accepts `square`, `triangle`, `sawtooth` & `sine`
+
+
+## Known Issues & Roadmap[Known Issues  & Roadmap]
 
 - Currently only the 4/4 time signature is supported
 - Hot reloading doesn't work
@@ -270,6 +504,6 @@ compressor={{
 - Sampler sample maps
 
 
-## License
+## License[License]
 
 [MIT License](http://opensource.org/licenses/MIT)

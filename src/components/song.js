@@ -99,6 +99,9 @@ export default class Song extends Component {
       }
     }
   }
+  componentWillUnmount() {
+    this.context.close();
+  }
   getMaster(): Object {
     return this;
   }
