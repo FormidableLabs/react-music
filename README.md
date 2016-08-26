@@ -411,24 +411,6 @@ steps={[
 
 **outputGain** (_number_)
 
-
---
-
-#### \<Phaser />
-
-**baseModulationFrequency** (_number_)
-
-**bypass** (_number_)
-
-**depth** (_number_)
-
-**feedback** (_number_)
-
-**rate** (_number_)
-
-**stereoPhase** (_number_)
-
-
 --
 
 #### \<PingPong />

@@ -26,7 +26,7 @@ export default class MoogFilter extends Component {
     resonance: PropTypes.number,
   };
   static defaultProps = {
-    bufferSize: 4096,
+    bufferSize: 256,
     cutoff: 0.065,
     resonance: 3.5,
   };

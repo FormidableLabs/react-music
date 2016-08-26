@@ -10,7 +10,6 @@ import LFO from './components/lfo.js';
 import Monosynth from './components/monosynth.js';
 import MoogFilter from './components/moog-filter.js';
 import Overdrive from './components/overdrive.js';
-import Phaser from './components/phaser.js';
 import PingPong from './components/ping-pong.js';
 import Reverb from './components/reverb.js';
 import Sequencer from './components/sequencer.js';
@@ -31,7 +30,6 @@ export {
   MoogFilter,
   Monosynth,
   Overdrive,
-  Phaser,
   PingPong,
   Reverb,
   Sequencer,

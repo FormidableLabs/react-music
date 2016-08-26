@@ -20,7 +20,7 @@ export default class Gain extends Component {
     children: PropTypes.node,
   };
   static defaultProps = {
-    amount: 0.0,
+    amount: 1.0,
   };
   static contextTypes = {
     audioContext: PropTypes.object,

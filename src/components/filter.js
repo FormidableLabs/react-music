@@ -3,7 +3,6 @@
 import React, { PropTypes, Component } from 'react';
 
 type Props = {
-  Q?: number;
   children?: any;
   frequency?: number;
   gain?: number;
@@ -21,14 +20,12 @@ export default class Filter extends Component {
   context: Context;
   props: Props;
   static propTypes = {
-    Q: PropTypes.number,
     children: PropTypes.node,
     frequency: PropTypes.number,
     gain: PropTypes.number,
     type: PropTypes.string,
   };
   static defaultProps = {
-    Q: 0,
     frequency: 2000,
     gain: 0,
     type: 'lowpass',
@@ -59,11 +56,7 @@ export default class Filter extends Component {
     this.applyProps(this.props);
   }
   componentWillReceiveProps(nextProps: Props) {
-    for (const prop in nextProps) {
-      if (this.connectNode[prop]) {
-        this.connectNode[prop] = nextProps[prop];
-      }
-    }
+    this.applyProps(nextProps);
   }
   componentWillUnmount() {
     this.connectNode.disconnect();

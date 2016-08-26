@@ -15,7 +15,7 @@ const Polysynth = (props) => (
         gain={0.15}
         steps={props.steps}
       />
-      <MoogFilter>
+      <MoogFilter bufferSize={4096}>
         <Synth
           type="square"
           gain={0.15}

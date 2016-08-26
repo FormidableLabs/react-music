@@ -35,7 +35,7 @@ export default class Reverb extends Component {
   };
   static defaultProps = {
     bypass: 0,
-    dryLevel: 1,
+    dryLevel: 0.5,
     highCut: 22050,
     impulse: 'reverb/room.wav',
     level: 1,

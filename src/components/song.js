@@ -91,7 +91,9 @@ export default class Song extends Component {
     if (prevState.buffersLoaded !== this.state.buffersLoaded ||
         prevProps.playing !== this.props.playing) {
       if (this.state.buffersLoaded === true && this.props.playing === true) {
-        this.scheduler.start(this.loop);
+        setTimeout(() => {
+          this.scheduler.start(this.loop);
+        }, 0);
       } else {
         this.scheduler.stop(true);
       }

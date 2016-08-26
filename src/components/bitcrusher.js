@@ -26,8 +26,8 @@ export default class Bitcrusher extends Component {
     normfreq: PropTypes.number,
   };
   static defaultProps = {
-    bits: 4,
-    bufferSize: 4096,
+    bits: 8,
+    bufferSize: 256,
     normfreq: 0.1,
   };
   static contextTypes = {
