@@ -14,6 +14,16 @@
 
 `npm install react-music`
 
+### Using docker
+
+Make sure you have docker and docker-compose installed. Then, build the image
+and run the application using the command below.
+
+```bash
+$ docker-compose build
+$ docker-compose up
+```
+
 ## Get Started
 
 The easiest way to get started is to clone this repo and run `npm install && npm start`. The demo song will be running at [http://localhost:3000](http://localhost:3000). You can open up the `/demo/index.js` file and edit your song there, using the API below as reference.
