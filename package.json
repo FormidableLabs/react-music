@@ -4,7 +4,7 @@
   "description": "Make beats with react",
   "main": "lib/index.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --port 3000 --config webpack.config.dev.js --content-base public/",
+    "start": "webpack-dev-server --inline --host 0.0.0.0 --port 3000 --config webpack.config.dev.js --content-base public/",
     "build": "babel src -d lib --copy-files",
     "clean": "rimraf dist",
     "dist": "npm run clean && webpack && cp -a public/. dist/",
