@@ -1,6 +1,8 @@
+// @flow
 import React, { PropTypes, Component } from 'react';
 
 export default class Bus extends Component {
+  connectNode: Object;
   static propTypes = {
     children: PropTypes.node,
     gain: PropTypes.number,
@@ -19,14 +21,14 @@ export default class Bus extends Component {
     connectNode: PropTypes.object,
     getMaster: PropTypes.func,
   };
-  constructor(props, context) {
+  constructor(props: Object, context: Object) {
     super(props);
 
     this.connectNode = context.audioContext.createGain();
     this.connectNode.gain.value = props.gain;
     this.connectNode.connect(context.connectNode);
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       ...this.context,
       connectNode: this.connectNode,
@@ -36,7 +38,7 @@ export default class Bus extends Component {
     const master = this.context.getMaster();
     master.busses[this.props.id] = this.connectNode;
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     const master = this.context.getMaster();
     delete master.busses[this.props.id];
 
@@ -47,7 +49,7 @@ export default class Bus extends Component {
     this.connectNode.disconnect();
     delete this.context.getMaster().busses[this.props.id];
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

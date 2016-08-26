@@ -1,3 +1,4 @@
+// @flow
 /* eslint-disable max-statements */
 import React, { PropTypes, Component } from 'react';
 import parser from 'note-parser';
@@ -5,6 +6,10 @@ import contour from 'audio-contour';
 import uuid from 'uuid';
 
 export default class Synth extends Component {
+  connectNode: Object;
+  getSteps: Function;
+  id: string;
+  playStep: Function;
   static displayName = 'Synth';
   static propTypes = {
     busses: PropTypes.array,
@@ -50,7 +55,7 @@ export default class Synth extends Component {
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
   };
-  constructor(props, context) {
+  constructor(props: Object, context: Object) {
     super(props);
 
     this.getSteps = this.getSteps.bind(this);
@@ -60,7 +65,7 @@ export default class Synth extends Component {
     this.connectNode.gain.value = props.gain;
     this.connectNode.connect(context.connectNode);
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       ...this.context,
       connectNode: this.connectNode,
@@ -71,7 +76,7 @@ export default class Synth extends Component {
     const master = this.context.getMaster();
     master.instruments[this.id] = this.getSteps;
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     this.connectNode.gain.value = nextProps.gain;
   }
   componentWillUnmount() {
@@ -79,7 +84,7 @@ export default class Synth extends Component {
     delete master.instruments[this.id];
     this.connectNode.disconnect();
   }
-  getSteps(playbackTime) {
+  getSteps(playbackTime: number) {
     const totalBars = this.context.getMaster().getMaxBars();
     const loopCount = totalBars / this.context.bars;
     for (let i = 0; i < loopCount; i++) {
@@ -95,7 +100,7 @@ export default class Synth extends Component {
       });
     }
   }
-  createOscillator(time, note, duration) {
+  createOscillator(time: number, note: string, duration: number) {
     const amplitudeGain = this.context.audioContext.createGain();
     amplitudeGain.gain.value = 0;
     amplitudeGain.connect(this.connectNode);
@@ -132,7 +137,7 @@ export default class Synth extends Component {
     const finish = env.stop(this.context.audioContext.currentTime + duration);
     osc.stop(finish);
   }
-  playStep(e) {
+  playStep(e: Object) {
     const { step, time } = e.args;
     const notes = step[2];
     const stepInterval = this.context.barInterval / this.context.resolution;
@@ -146,7 +151,7 @@ export default class Synth extends Component {
       this.createOscillator(time, notes, duration);
     }
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

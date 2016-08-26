@@ -1,6 +1,8 @@
+// @flow
 import React, { PropTypes, Component } from 'react';
 
 export default class Gain extends Component {
+  connectNode: Object;
   static propTypes = {
     amount: PropTypes.number,
     children: PropTypes.node,
@@ -16,26 +18,26 @@ export default class Gain extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props, context) {
+  constructor(props: Object, context: Object) {
     super(props);
 
     this.connectNode = context.audioContext.createGain();
     this.connectNode.gain.value = props.amount;
     this.connectNode.connect(context.connectNode);
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       ...this.context,
       connectNode: this.connectNode,
     };
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     this.connectNode.gain.value = nextProps.amount;
   }
   componentWillUnmount() {
     this.connectNode.disconnect();
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

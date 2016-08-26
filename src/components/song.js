@@ -1,8 +1,21 @@
+// @flow
 /* eslint-disable no-loop-func, react/no-did-mount-set-state */
 import React, { Component, PropTypes } from 'react';
 import Scheduler from '../utils/scheduler';
 
 export default class Song extends Component {
+  audioContext: Object;
+  barInterval: number;
+  bars: Object;
+  bufferLoaded: Function;
+  buffers: Object;
+  busses: Object;
+  getMaster: Function;
+  getMaxBars: Function;
+  instruments: Object;
+  loop: Function;
+  scheduler: Object;
+  state: Object;
   static propTypes = {
     children: PropTypes.node,
     playing: PropTypes.bool,
@@ -21,7 +34,7 @@ export default class Song extends Component {
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
   };
-  constructor(props) {
+  constructor(props: Object) {
     super(props);
 
     this.state = {
@@ -46,7 +59,7 @@ export default class Song extends Component {
       context: this.audioContext,
     });
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       tempo: this.props.tempo,
       audioContext: this.audioContext,
@@ -64,10 +77,10 @@ export default class Song extends Component {
       });
     }
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     this.barInterval = (60000 / nextProps.tempo) * 4;
   }
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: Object, prevState: Object) {
     if (prevState.buffersLoaded !== this.state.buffersLoaded ||
         prevProps.playing !== this.props.playing) {
       if (this.state.buffersLoaded === true && this.props.playing === true) {
@@ -79,10 +92,10 @@ export default class Song extends Component {
       }
     }
   }
-  getMaster() {
+  getMaster(): Object {
     return this;
   }
-  getMaxBars() {
+  getMaxBars(): number {
     return Math.max(...Object.keys(this.bars).map((b) => this.bars[b]));
   }
   bufferLoaded() {
@@ -92,7 +105,7 @@ export default class Song extends Component {
       });
     }
   }
-  loop(e) {
+  loop(e: Object) {
     const maxBars = Object.keys(this.bars).length ? this.getMaxBars() : 1;
     Object.keys(this.instruments).forEach((id) => {
       const callback = this.instruments[id];
@@ -100,7 +113,7 @@ export default class Song extends Component {
     });
     this.scheduler.insert(e.playbackTime + ((this.barInterval * maxBars) / 1000), this.loop);
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

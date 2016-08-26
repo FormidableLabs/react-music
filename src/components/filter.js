@@ -1,7 +1,10 @@
+// @flow
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
 
 export default class Filter extends Component {
+  applyProps: Function;
+  connectNode: Object;
   static propTypes = {
     Q: PropTypes.number,
     children: PropTypes.node,
@@ -23,7 +26,7 @@ export default class Filter extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props, context) {
+  constructor(props: Object, context: Object) {
     super(props);
 
     this.connectNode = context.audioContext.createBiquadFilter();
@@ -31,7 +34,7 @@ export default class Filter extends Component {
 
     this.applyProps = this.applyProps.bind(this);
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       ...this.context,
       connectNode: this.connectNode,
@@ -40,7 +43,7 @@ export default class Filter extends Component {
   componentDidMount() {
     this.applyProps(this.props);
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     for (const prop in nextProps) {
       if (this.connectNode[prop]) {
         this.connectNode[prop] = nextProps[prop];
@@ -50,7 +53,7 @@ export default class Filter extends Component {
   componentWillUnmount() {
     this.connectNode.disconnect();
   }
-  applyProps(props) {
+  applyProps(props: Object) {
     for (const prop in props) {
       if (this.connectNode[prop]) {
         if (typeof this.connectNode[prop] === 'object') {
@@ -61,7 +64,7 @@ export default class Filter extends Component {
       }
     }
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

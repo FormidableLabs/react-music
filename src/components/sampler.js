@@ -1,9 +1,16 @@
+// @flow
 import React, { PropTypes, Component } from 'react';
 import uuid from 'uuid';
 
 import { BufferLoader } from '../utils/buffer-loader';
 
 export default class Sampler extends Component {
+  buffer: Object;
+  bufferLoaded: Function;
+  connectNode: Object;
+  id: String;
+  getSteps: Function;
+  playStep: Function;
   static displayName = 'Sampler';
   static propTypes = {
     busses: PropTypes.array,
@@ -39,10 +46,9 @@ export default class Sampler extends Component {
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
   };
-  constructor(props, context) {
+  constructor(props: Object, context: Object) {
     super(props);
 
-    this.buffer = null;
     this.bufferLoaded = this.bufferLoaded.bind(this);
     this.getSteps = this.getSteps.bind(this);
     this.playStep = this.playStep.bind(this);
@@ -51,7 +57,7 @@ export default class Sampler extends Component {
     this.connectNode.gain.value = props.gain;
     this.connectNode.connect(context.connectNode);
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       ...this.context,
       connectNode: this.connectNode,
@@ -66,13 +72,13 @@ export default class Sampler extends Component {
 
     const bufferLoader = new BufferLoader(
       this.context.audioContext,
-      [this.props.sample ],
+      [this.props.sample],
       this.bufferLoaded
     );
 
     bufferLoader.load();
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     this.connectNode.gain.value = nextProps.gain;
     if (this.props.sample !== nextProps.sample) {
       const master = this.context.getMaster();
@@ -97,7 +103,7 @@ export default class Sampler extends Component {
     delete master.instruments[this.id];
     this.connectNode.disconnect();
   }
-  getSteps(playbackTime) {
+  getSteps(playbackTime: number) {
     const totalBars = this.context.getMaster().getMaxBars();
     const loopCount = totalBars / this.context.bars;
     for (let i = 0; i < loopCount; i++) {
@@ -115,7 +121,7 @@ export default class Sampler extends Component {
       });
     }
   }
-  playStep(e) {
+  playStep(e: Object) {
     const source = this.context.audioContext.createBufferSource();
     source.buffer = this.buffer;
     if (source.detune) {
@@ -141,13 +147,13 @@ export default class Sampler extends Component {
       source.disconnect();
     });
   }
-  bufferLoaded([buffer ]) {
-    this.buffer = buffer;
+  bufferLoaded(buffers: Array<Object>) {
+    this.buffer = buffers[0];
     const master = this.context.getMaster();
     delete master.buffers[this.id];
     this.context.bufferLoaded();
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

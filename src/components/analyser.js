@@ -1,7 +1,11 @@
+// @flow
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
 
-export default class Sequencer extends Component {
+export default class Analyser extends Component {
+  applyProps: Function;
+  connectNode: Object;
+  visualization: Object;
   static propTypes = {
     children: PropTypes.node,
     fftSize: PropTypes.number,
@@ -21,7 +25,7 @@ export default class Sequencer extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props, context) {
+  constructor(props: Object, context: Object) {
     super(props);
 
     this.visualization = context.audioContext.createScriptProcessor(2048, 1, 1);
@@ -35,7 +39,7 @@ export default class Sequencer extends Component {
       props.onAudioProcess(this.connectNode);
     };
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       ...this.context,
       connectNode: this.connectNode,
@@ -44,20 +48,20 @@ export default class Sequencer extends Component {
   componentDidMount() {
     this.applyProps(this.props);
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     this.applyProps(nextProps);
   }
   componentWillUnmount() {
     this.connectNode.disconnect();
   }
-  applyProps(props) {
+  applyProps(props: Object) {
     for (const prop in props) {
       if (this.connectNode[prop]) {
         this.connectNode[prop] = props[prop];
       }
     }
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

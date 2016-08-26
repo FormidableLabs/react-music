@@ -1,9 +1,16 @@
+// @flow
 import React, { PropTypes, Component } from 'react';
 import parser from 'note-parser';
 import contour from 'audio-contour';
 import uuid from 'uuid';
 
 export default class Monosynth extends Component {
+  amplitudeGain: Object;
+  connectNode: Object;
+  id: String;
+  getSteps: Function;
+  osc: Object;
+  playStep: Function;
   static displayName = 'Synth';
   static propTypes = {
     busses: PropTypes.array,
@@ -51,7 +58,7 @@ export default class Monosynth extends Component {
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
   };
-  constructor(props, context) {
+  constructor(props: Object, context: Object) {
     super(props);
 
     this.getSteps = this.getSteps.bind(this);
@@ -61,7 +68,7 @@ export default class Monosynth extends Component {
     this.connectNode.gain.value = props.gain;
     this.connectNode.connect(context.connectNode);
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       ...this.context,
       connectNode: this.connectNode,
@@ -96,7 +103,7 @@ export default class Monosynth extends Component {
     this.osc.stop();
     this.connectNode.disconnect();
   }
-  getSteps(playbackTime) {
+  getSteps(playbackTime: number) {
     const totalBars = this.context.getMaster().getMaxBars();
     const loopCount = totalBars / this.context.bars;
     for (let i = 0; i < loopCount; i++) {
@@ -140,14 +147,14 @@ export default class Monosynth extends Component {
     env.start(time);
     env.stop(this.context.audioContext.currentTime + duration);
   }
-  playStep(e) {
+  playStep(e: Object) {
     const { step, glide, time } = e.args;
     const note = step[2];
     const stepInterval = this.context.barInterval / this.context.resolution;
     const duration = (step[1] * stepInterval) / 1000;
     this.createOscillator(time, note, duration, glide);
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

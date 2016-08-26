@@ -1,8 +1,10 @@
+// @flow
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
 import Tuna from 'tunajs';
 
 export default class Delay extends Component {
+  connectNode: Object;
   static propTypes = {
     bypass: PropTypes.number,
     children: PropTypes.node,
@@ -28,7 +30,7 @@ export default class Delay extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props, context) {
+  constructor(props: Object, context: Object) {
     super(props);
 
     const tuna = new Tuna(context.audioContext);
@@ -44,13 +46,13 @@ export default class Delay extends Component {
 
     this.connectNode.connect(context.connectNode);
   }
-  getChildContext() {
+  getChildContext(): Object {
     return {
       ...this.context,
       connectNode: this.connectNode,
     };
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     for (const prop in nextProps) {
       if (this.connectNode[prop]) {
         this.connectNode[prop] = nextProps[prop];
@@ -60,7 +62,7 @@ export default class Delay extends Component {
   componentWillUnmount() {
     this.connectNode.disconnect();
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }

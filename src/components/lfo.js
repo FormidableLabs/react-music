@@ -1,6 +1,9 @@
+// @flow
 import React, { PropTypes, Component } from 'react';
 
 export default class Synth extends Component {
+  connectNode: Object;
+  osc: Object;
   static displayName = 'Synth';
   static propTypes = {
     children: PropTypes.node,
@@ -34,7 +37,7 @@ export default class Synth extends Component {
     this.osc.stop();
     this.connectNode.disconnect();
   }
-  render() {
+  render(): React.Element<any> {
     return <span>{this.props.children}</span>;
   }
 }
