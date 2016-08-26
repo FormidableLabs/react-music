@@ -1,6 +1,6 @@
 {
   "name": "react-music",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Make beats with react",
   "main": "lib",
   "files": [
