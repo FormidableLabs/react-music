@@ -61,6 +61,9 @@ export default class Song extends Component {
 
     this.init();
   }
+  componentWillUnmount() {
+    this.context.close();
+  }
   setupVisualization() {
     this.visualization = this.context.createScriptProcessor(2048, 1, 1);
     this.visualization.connect(this.context.destination);
