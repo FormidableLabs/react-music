@@ -1,5 +1,8 @@
+// @flow
 /* eslint-disable no-console */
-export const BufferLoader = function BufferLoader(context, urlList, callback) {
+export const BufferLoader = function BufferLoader(
+  context: Object, urlList: Array<string>, callback: Function
+) {
   this.context = context;
   this.urlList = urlList;
   this.onload = callback;

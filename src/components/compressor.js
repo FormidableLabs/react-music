@@ -2,9 +2,25 @@
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
 
+type Props = {
+  attack?: number;
+  children?: any;
+  knee?: number;
+  ratio?: number;
+  release?: number;
+  threshold?: number;
+};
+
+type Context = {
+  audioContext: Object;
+  connectNode: Object;
+};
+
 export default class Compressor extends Component {
   applyProps: Function;
   connectNode: Object;
+  context: Context;
+  props: Props;
   static propTypes = {
     attack: PropTypes.number,
     children: PropTypes.node,
@@ -28,7 +44,7 @@ export default class Compressor extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     this.connectNode = context.audioContext.createDynamicsCompressor();
@@ -45,13 +61,13 @@ export default class Compressor extends Component {
   componentDidMount() {
     this.applyProps(this.props);
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     this.applyProps(nextProps);
   }
   componentWillUnmount() {
     this.connectNode.disconnect();
   }
-  applyProps(props: Object) {
+  applyProps(props: Props) {
     for (const prop in props) {
       if (this.connectNode[prop]) {
         this.connectNode[prop].value = props[prop];

@@ -1,8 +1,22 @@
 // @flow
 import React, { PropTypes, Component } from 'react';
 
+type Props = {
+  children?: any;
+  gain?: number;
+  id: string;
+};
+
+type Context = {
+  audioContext: Object;
+  connectNode: Object;
+  getMaster: Function;
+};
+
 export default class Bus extends Component {
   connectNode: Object;
+  context: Context;
+  props: Props;
   static propTypes = {
     children: PropTypes.node,
     gain: PropTypes.number,
@@ -21,7 +35,7 @@ export default class Bus extends Component {
     connectNode: PropTypes.object,
     getMaster: PropTypes.func,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     this.connectNode = context.audioContext.createGain();
@@ -38,7 +52,7 @@ export default class Bus extends Component {
     const master = this.context.getMaster();
     master.busses[this.props.id] = this.connectNode;
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     const master = this.context.getMaster();
     delete master.busses[this.props.id];
 

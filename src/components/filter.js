@@ -2,9 +2,24 @@
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
 
+type Props = {
+  Q?: number;
+  children?: any;
+  frequency?: number;
+  gain?: number;
+  type?: string;
+};
+
+type Context = {
+  audioContext: Object;
+  connectNode: Object;
+};
+
 export default class Filter extends Component {
   applyProps: Function;
   connectNode: Object;
+  context: Context;
+  props: Props;
   static propTypes = {
     Q: PropTypes.number,
     children: PropTypes.node,
@@ -26,7 +41,7 @@ export default class Filter extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     this.connectNode = context.audioContext.createBiquadFilter();
@@ -43,7 +58,7 @@ export default class Filter extends Component {
   componentDidMount() {
     this.applyProps(this.props);
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     for (const prop in nextProps) {
       if (this.connectNode[prop]) {
         this.connectNode[prop] = nextProps[prop];
@@ -53,7 +68,7 @@ export default class Filter extends Component {
   componentWillUnmount() {
     this.connectNode.disconnect();
   }
-  applyProps(props: Object) {
+  applyProps(props: Props) {
     for (const prop in props) {
       if (this.connectNode[prop]) {
         if (typeof this.connectNode[prop] === 'object') {

@@ -5,11 +5,41 @@ import parser from 'note-parser';
 import contour from 'audio-contour';
 import uuid from 'uuid';
 
+type Envelope = {
+  attack?: number;
+  decay?: number;
+  sustain?: number;
+  release?: number;
+};
+
+type Props = {
+  busses: Array<string>;
+  children: any;
+  envelope: Envelope;
+  gain?: number;
+  steps: Array<any>;
+  transpose?: number;
+  type: string;
+};
+
+type Context = {
+  audioContext: Object;
+  bars: number;
+  barInterval: number;
+  connectNode: Object;
+  getMaster: Function;
+  resolution: number;
+  scheduler: Object;
+  tempo: number;
+};
+
 export default class Synth extends Component {
   connectNode: Object;
+  context: Context;
   getSteps: Function;
   id: string;
   playStep: Function;
+  props: Props;
   static displayName = 'Synth';
   static propTypes = {
     busses: PropTypes.array,
@@ -55,7 +85,7 @@ export default class Synth extends Component {
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     this.getSteps = this.getSteps.bind(this);
@@ -76,7 +106,7 @@ export default class Synth extends Component {
     const master = this.context.getMaster();
     master.instruments[this.id] = this.getSteps;
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     this.connectNode.gain.value = nextProps.gain;
   }
   componentWillUnmount() {

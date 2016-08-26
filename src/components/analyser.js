@@ -2,9 +2,23 @@
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
 
+type Props = {
+  children?: any;
+  fftSize?: number;
+  onAudioProcess?: Function;
+  smoothingTimeConstant?: number;
+};
+
+type Context = {
+  audioContext: Object;
+  connectNode: Object;
+};
+
 export default class Analyser extends Component {
   applyProps: Function;
   connectNode: Object;
+  context: Context;
+  props: Props;
   visualization: Object;
   static propTypes = {
     children: PropTypes.node,
@@ -25,7 +39,7 @@ export default class Analyser extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     this.visualization = context.audioContext.createScriptProcessor(2048, 1, 1);
@@ -36,7 +50,9 @@ export default class Analyser extends Component {
     this.applyProps = this.applyProps.bind(this);
 
     this.visualization.onaudioprocess = () => {
-      props.onAudioProcess(this.connectNode);
+      if (props.onAudioProcess) {
+        props.onAudioProcess(this.connectNode);
+      }
     };
   }
   getChildContext(): Object {
@@ -48,13 +64,13 @@ export default class Analyser extends Component {
   componentDidMount() {
     this.applyProps(this.props);
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     this.applyProps(nextProps);
   }
   componentWillUnmount() {
     this.connectNode.disconnect();
   }
-  applyProps(props: Object) {
+  applyProps(props: Props) {
     for (const prop in props) {
       if (this.connectNode[prop]) {
         this.connectNode[prop] = props[prop];

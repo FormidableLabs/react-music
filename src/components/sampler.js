@@ -4,13 +4,36 @@ import uuid from 'uuid';
 
 import { BufferLoader } from '../utils/buffer-loader';
 
+type Props = {
+  busses: Array<string>;
+  children?: any;
+  detune?: number;
+  gain?: number;
+  sample: string;
+  steps: Array<any>;
+};
+
+type Context = {
+  audioContext: Object;
+  bars: number;
+  barInterval: number;
+  bufferLoaded: Function;
+  connectNode: Object;
+  getMaster: Function;
+  resolution: number;
+  scheduler: Object;
+  tempo: number;
+};
+
 export default class Sampler extends Component {
   buffer: Object;
   bufferLoaded: Function;
   connectNode: Object;
+  context: Context;
   id: String;
   getSteps: Function;
   playStep: Function;
+  props: Props;
   static displayName = 'Sampler';
   static propTypes = {
     busses: PropTypes.array,
@@ -46,7 +69,7 @@ export default class Sampler extends Component {
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     this.bufferLoaded = this.bufferLoaded.bind(this);
@@ -78,7 +101,7 @@ export default class Sampler extends Component {
 
     bufferLoader.load();
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     this.connectNode.gain.value = nextProps.gain;
     if (this.props.sample !== nextProps.sample) {
       const master = this.context.getMaster();

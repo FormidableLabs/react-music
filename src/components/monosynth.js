@@ -4,13 +4,44 @@ import parser from 'note-parser';
 import contour from 'audio-contour';
 import uuid from 'uuid';
 
+type Envelope = {
+  attack?: number;
+  decay?: number;
+  sustain?: number;
+  release?: number;
+};
+
+type Props = {
+  busses: Array<string>;
+  children: any;
+  envelope: Envelope;
+  gain?: number;
+  glide?: number;
+  steps: Array<any>;
+  transpose?: number;
+  type: string;
+};
+
+type Context = {
+  audioContext: Object;
+  bars: number;
+  barInterval: number;
+  connectNode: Object;
+  getMaster: Function;
+  resolution: number;
+  scheduler: Object;
+  tempo: number;
+};
+
 export default class Monosynth extends Component {
   amplitudeGain: Object;
   connectNode: Object;
+  context: Context;
   id: String;
   getSteps: Function;
   osc: Object;
   playStep: Function;
+  props: Props;
   static displayName = 'Synth';
   static propTypes = {
     busses: PropTypes.array,
@@ -58,7 +89,7 @@ export default class Monosynth extends Component {
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     this.getSteps = this.getSteps.bind(this);

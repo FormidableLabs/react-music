@@ -3,8 +3,20 @@ import React, { PropTypes, Component } from 'react';
 
 import uuid from 'uuid';
 
+type Props = {
+  bars?: number;
+  children?: any;
+  resolution?: number;
+};
+
+type Context = {
+  getMaster: Function;
+};
+
 export default class Sequencer extends Component {
   id: String;
+  context: Context;
+  props: Props;
   static propTypes = {
     bars: PropTypes.number,
     children: PropTypes.node,
@@ -34,7 +46,7 @@ export default class Sequencer extends Component {
     const master = this.context.getMaster();
     master.bars[this.id] = this.props.bars;
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     const master = this.context.getMaster();
     master.bars[this.id] = nextProps.bars;
   }

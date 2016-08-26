@@ -1,8 +1,20 @@
 // @flow
 import React, { PropTypes, Component } from 'react';
 
+type Props = {
+  amount?: number;
+  children?: any;
+};
+
+type Context = {
+  audioContext: Object;
+  connectNode: Object;
+};
+
 export default class Gain extends Component {
   connectNode: Object;
+  context: Context;
+  props: Props;
   static propTypes = {
     amount: PropTypes.number,
     children: PropTypes.node,
@@ -18,7 +30,7 @@ export default class Gain extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     this.connectNode = context.audioContext.createGain();
@@ -31,7 +43,7 @@ export default class Gain extends Component {
       connectNode: this.connectNode,
     };
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     this.connectNode.gain.value = nextProps.amount;
   }
   componentWillUnmount() {

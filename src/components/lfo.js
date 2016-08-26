@@ -1,9 +1,24 @@
 // @flow
 import React, { PropTypes, Component } from 'react';
 
-export default class Synth extends Component {
+type Props = {
+  children?: any;
+  connect: Function;
+  frequency?: number;
+  gain?: number;
+  type?: string;
+};
+
+type Context = {
+  audioContext: Object;
   connectNode: Object;
+};
+
+export default class LFO extends Component {
+  connectNode: Object;
+  context: Context;
   osc: Object;
+  props: Props;
   static displayName = 'Synth';
   static propTypes = {
     children: PropTypes.node,

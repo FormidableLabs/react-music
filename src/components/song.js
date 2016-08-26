@@ -3,6 +3,12 @@
 import React, { Component, PropTypes } from 'react';
 import Scheduler from '../utils/scheduler';
 
+type Props = {
+  children?: any;
+  playing?: boolean;
+  tempo: number;
+};
+
 export default class Song extends Component {
   audioContext: Object;
   barInterval: number;
@@ -14,6 +20,7 @@ export default class Song extends Component {
   getMaxBars: Function;
   instruments: Object;
   loop: Function;
+  props: Props;
   scheduler: Object;
   state: Object;
   static propTypes = {
@@ -34,7 +41,7 @@ export default class Song extends Component {
     scheduler: PropTypes.object,
     tempo: PropTypes.number,
   };
-  constructor(props: Object) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -77,7 +84,7 @@ export default class Song extends Component {
       });
     }
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     this.barInterval = (60000 / nextProps.tempo) * 4;
   }
   componentDidUpdate(prevProps: Object, prevState: Object) {

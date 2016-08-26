@@ -3,8 +3,26 @@
 import React, { PropTypes, Component } from 'react';
 import Tuna from 'tunajs';
 
+type Props = {
+  bypass?: number;
+  children?: any;
+  dryLevel?: number;
+  highCut?: number;
+  impulse?: string;
+  level?: number;
+  lowCut?: number;
+  wetLevel?: number;
+};
+
+type Context = {
+  audioContext: Object;
+  connectNode: Object;
+};
+
 export default class Reverb extends Component {
   connectNode: Object;
+  context: Context;
+  props: Props;
   static propTypes = {
     bypass: PropTypes.number,
     children: PropTypes.node,
@@ -32,7 +50,7 @@ export default class Reverb extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     const tuna = new Tuna(context.audioContext);
@@ -55,7 +73,7 @@ export default class Reverb extends Component {
       connectNode: this.connectNode,
     };
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     for (const prop in nextProps) {
       if (this.connectNode[prop]) {
         this.connectNode[prop] = nextProps[prop];

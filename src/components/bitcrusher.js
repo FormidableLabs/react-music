@@ -3,8 +3,22 @@
 import React, { PropTypes, Component } from 'react';
 import Tuna from 'tunajs';
 
+type Props = {
+  bits?: number;
+  bufferSize?: number;
+  children?: any;
+  normfreq?: number;
+};
+
+type Context = {
+  audioContext: Object;
+  connectNode: Object;
+};
+
 export default class Bitcrusher extends Component {
   connectNode: Object;
+  context: Context;
+  props: Props;
   static propTypes = {
     bits: PropTypes.number,
     bufferSize: PropTypes.number,
@@ -24,7 +38,7 @@ export default class Bitcrusher extends Component {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
   };
-  constructor(props: Object, context: Object) {
+  constructor(props: Props, context: Context) {
     super(props);
 
     const tuna = new Tuna(context.audioContext);
@@ -43,7 +57,7 @@ export default class Bitcrusher extends Component {
       connectNode: this.connectNode,
     };
   }
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps: Props) {
     for (const prop in nextProps) {
       if (this.connectNode[prop]) {
         this.connectNode[prop] = nextProps[prop];
