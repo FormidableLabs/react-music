@@ -40,7 +40,7 @@ export default class Scheduler {
     return this;
   }
 
-  stop(reset: boolean) {
+  stop(reset: boolean): Object {
     if (this.timerID !== 0) {
       clearInterval(this.timerID);
       this.timerID = 0;
@@ -53,7 +53,7 @@ export default class Scheduler {
     return this;
   }
 
-  insert(time: number, callback: Function, args: Array<any>) {
+  insert(time: number, callback: Function, args: Array<any>): number {
     const id = ++this.scheduleID;
     const event = { id, time, callback, args };
 
@@ -71,7 +71,7 @@ export default class Scheduler {
     return id;
   }
 
-  nextTick(time: number, callback: Function, args: Array<any>) {
+  nextTick(time: number, callback: Function, args: Array<any>): number {
     return this.insert(time + this.aheadTime, callback, args);
   }
 
