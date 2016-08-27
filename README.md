@@ -8,7 +8,25 @@
 
 ![http://i.imgur.com/2t1NPJy.png](http://i.imgur.com/2t1NPJy.png)
 
-> Note: This library is super experimental and alpha. It is the first release of a weekend project. I'll be working to make it better, but the current release is to just let people play around with it.
+<!-- MarkdownTOC depth=3 autolink=true bracket=round -->
+
+- [Install](#install)
+- [Get Started](#get-started)
+- [Basic Concepts](#basic-concepts)
+- [Instruments](#instruments)
+- [Effects](#effects)
+  - [Effect Busses](#effect-busses)
+- [LFO](#lfo)
+- [API](#api)
+  - [Top Level](#top-level)
+  - [Intruments](#intruments)
+  - [Effects](#effects-1)
+  - [Special](#special)
+- [Known Issues & Roadmap](#known-issues--roadmap)
+- [License](#license)
+
+<!-- /MarkdownTOC -->
+
 
 ## Install
 
@@ -28,9 +46,9 @@ $ docker-compose up
 
 The easiest way to get started is to clone this repo and run `npm install && npm start`. The demo song will be running at [http://localhost:3000](http://localhost:3000). You can open up the `/demo/index.js` file and edit your song there, using the API below as reference.
 
-That said, you can import the primitives yourself and run your own build setup, but be aware that hot reloading doesn't work, and runtime prop changes don't propogate yet.
+That said, you can import the primitives yourself and run your own build setup if you want.
 
-### Basic Concepts
+## Basic Concepts
 
 #### Song
 
@@ -45,7 +63,7 @@ The first thing you want to do is create a `Song` component. This is the control
 #### Sequencer
 
 
-Direct children of `Song` must always be `Sequencer` components. Your `Sequencer`'s are what you use to define a looping section. They take two props. The first `resolution` is the resolution of steps in your sequence array. This defaults to `16`, which is a sixteenth note. The second is `bars` which is how many bars the sequencer sequences before it loops. You can have multiple sequencers in your song, and the main Song loop is based upon the sequencer with the largest number of bars. Here is an example:
+Your `Sequencer`'s are what you use to define a looping section. They take two props. The first `resolution` is the resolution of steps in your sequence array. This defaults to `16`, which is a sixteenth note. The second is `bars` which is how many bars the sequencer sequences before it loops. You can have multiple sequencers in your song, and the main Song loop is based upon the sequencer with the largest number of bars. Here is an example:
 
 ```js
 <Song tempo={90}>
@@ -55,7 +73,9 @@ Direct children of `Song` must always be `Sequencer` components. Your `Sequencer
 </Song>
 ```
 
-Once you have a `Song` and a `Sequencer` component, you can add instruments to your `Sequencer`. Currently, two instruments are provided, `Synth` and `Sampler`. Lets take a look at how these work:
+Once you have a `Song` and a `Sequencer` component, you can add instruments to your `Sequencer`. Lets take a look at how these work:
+
+## Instruments
 
 #### Sampler
 
@@ -71,6 +91,8 @@ The sampler component is used to play audio samples. To use it, you must at very
   </Sequencer>
 </Song>
 ```
+
+You can also provide an array for a step, where the second value is a tuning, from -12 to 12.
 
 #### Synth
 
@@ -90,45 +112,192 @@ The `Synth` component is used to create an oscillator and play it on steps, just
 </Song>
 ```
 
-## Props API
+#### Monosynth
 
-### Song
+The `Monosynth` component is a `Synth` component, but it only plays one note at a time. It also has a `glide` prop that specifies portamento length. So if two notes overlap, the monosynth glides up to the next value on that duration. Check out how:
 
-**tempo** (_number_) : Your song tempo
+```js
+<Song tempo={90}>
+  <Sequencer resolution={16} bars={1}>
+    <Monosynth
+      glide={0.5}
+      type="square"
+      steps={[
+        [0, 5, "c3"],
+        [4, 4, "c4"],
+      ]}
+    />
+  </Sequencer>
+</Song>
+```
+
+## Effects
+
+There are a ton of new effects added in 1.0.0. You can compose effect chains by wrapping effects around your instruments. Here is an example of how you would do that:
+
+```js
+<Song tempo={90}>
+  <Sequencer resolution={16} bars={1}>
+    <Reverb>
+      <Delay>
+        <Monosynth
+          steps={[
+            [0, 4, "c3"],
+            [4, 4, "c4"],
+          ]}
+        />
+      </Delay>
+    </Reverb>
+  </Sequencer>
+</Song>
+```
+
+### Effect Busses
+
+If you want to define an effects bus, which is a set of effects that multiple instruments can send their output to, this is achieved with the `Bus` component.
+
+First you want to create a `Bus` component, and give it an identifier:
+
+```js
+<Song tempo={90}>
+  <Bus id="myBus"/>
+</Song>
+```
+
+Next, wrap your bus with the effect chain you want to make available, similarly to the way you would wrap effects around an instrument. You generally want to do this with effects that have wet/dry control, and set the `dryLevel` to 0:
+
+```js
+<Song tempo={90}>
+  <Delay dryValue={0}>
+    <Bus id="myBus"/>
+  </Delay>
+</Song>
+```
+
+Finally, to hook an instrument up to your bus, or several busses, add their id's to the `busses` prop on an instrument:
+
+```js
+<Song tempo={90}>
+  <Delay dryValue={0}>
+    <Bus id="myBus"/>
+  </Delay>
+  <Sampler
+  	busses={['myBus']}
+  	sample='/samples/kick.wav'
+  	steps={[1,4,8,12]}
+  />
+</Song>
+```
+
+## LFO
+
+You know whats bananas? LFO. Thats what. You can use an oscillator to modify properties of your instruments and effects. This is done with the `LFO` component. Any node that you want to apply LFO to just needs it added as a child. Then you define a `connect` prop that returns a function that lets you select a parent AudioNode property to oscillate. See the following example.
+
+```js
+<Song tempo={90}>
+  <Synth
+    type="square"
+    steps={[
+      [0, 2, "c3"],
+      [8, 2, ["c3", "d#3", "f4"]]
+    ]}
+  >
+    <LF0
+      type="sine"
+      frequency={0.05}
+      connect={(c) => c.gain}
+    />
+  </Synth>
+</Song>
+```
+
+## API
+
+### Top Level
+
+---
+
+#### \<Song />
 
 **autoplay** (_boolean_) : Whether the song should start playing automatically
 
-### Sequencer
+**tempo** (_number_) : Your song tempo
 
-**resolution** (_number_) : Step resolution for your sequence
+--
+
+#### \<Sequencer />
 
 **bars** (_number_) : Number of bars in your sequence
 
-### Sampler
+**resolution** (_number_) : Step resolution for your sequence
 
-**sample** (_number_) : Step resolution for your sequence
+### Intruments
 
-**steps** (_array_) : Array of step indexes for the sample to be played at
+---
 
-**volume** (_number_) : A number (0-100) specifying instrument volume
+#### \<Monosynth />
 
-**detune** (_number_) : A number (in cents) specifying instrument detune
+**busses** (_array_) : An array of `Bus` id strings to send output to
 
-**compressor** (_object_) : An object specifying compressor settings
+**envelope** (_object_) : An object specifying envelope settings
 
 ```js
-compressor={{
-  threshold: -24,
-  knee: 30,
-  ratio: 12,
-  attack: 0.003,
-  release: 0.25,
+envelope={{
+  attack: 0.1,
+  sustain: 0.3,
+  decay: 20,
+  release: 0.5
 }}
 ```
 
-### Synth
+**gain** (_number_) : A number specifying instrument gain
+
+**glide** (_number_) : Portamento length for overlapping notes
+
+**steps** (_array_) : Array of step arrays for the notes to be played at
+
+```js
+steps={[
+  [0, 2, "a2"]
+]}
+```
+
+**transpose** (_number_) : Positive or negative number for transposition of notes
 
 **type** (_string_) : Oscillator type. Accepts `square`, `triangle`, `sawtooth` & `sine`
+
+--
+
+#### \<Sampler />
+
+**busses** (_array_) : An array of `Bus` id strings to send output to
+
+**detune** (_number_) : A number (in cents) specifying instrument detune
+
+**gain** (_number_) : A number specifying instrument gain
+
+**sample** (_number_) : Step resolution for your sequence
+
+**steps** (_array_) : Array of step indexes for the sample to be played at. Accepts arrays for steps in order to provide a second argument for index based detune (in between -12 & 12).
+
+--
+
+#### \<Synth />
+
+**busses** (_array_) : An array of `Bus` id strings to send output to
+
+**envelope** (_object_) : An object specifying envelope settings
+
+```js
+envelope={{
+  attack: 0.1,
+  sustain: 0.3,
+  decay: 20,
+  release: 0.5
+}}
+```
+
+**gain** (_number_) : A number specifying instrument gain
 
 **steps** (_array_) : Array of step arrays for the notes to be played at. Accepts in array in the `[ step, duration, note || [notes] ]` format.
 
@@ -144,44 +313,188 @@ steps={[
 ]}
 ```
 
-**volume** (_number_) : A number (0-100) specifying instrument volume
+**transpose** (_number_) : Positive or negative number for transposition of notes
 
-**envelope** (_object_) : An object specifying envelope settings
+**type** (_string_) : Oscillator type. Accepts `square`, `triangle`, `sawtooth` & `sine`
 
-```js
-envelope={{
-  attack: 0.1,
-  sustain: 0.3,
-  decay: 20,
-  release: 0.5
-}}
-```
 
-**compressor** (_object_) : An object specifying compressor settings
+### Effects
 
-```js
-compressor={{
-  threshold: -24,
-  knee: 30,
-  ratio: 12,
-  attack: 0.003,
-  release: 0.25,
-}}
-```
+---
+
+#### \<Bitcrusher />
+
+**bits** (_number_)
+
+**bufferSize** (_number_)
+
+**normfreq** (_number_)
+
+
+--
+
+#### \<Chorus />
+
+**bypass** (_number_)
+
+**delay** (_number_)
+
+**feedback** (_number_)
+
+**rate** (_number_)
+
+
+--
+
+#### \<Compressor />
+
+**attack** (_number_)
+
+**knee** (_number_)
+
+**ratio** (_number_)
+
+**release** (_number_)
+
+**threshold** (_number_)
+
+
+--
+
+#### \<Delay />
+
+**bypass** (_number_)
+
+**cutoff** (_number_)
+
+**delayTime** (_number_)
+
+**dryLevel** (_number_)
+
+**feedback** (_number_)
+
+**wetLevel** (_number_)
+
+
+--
+
+#### \<Filter />
+
+**Q** (_number_)
+
+**frequency** (_number_)
+
+**gain** (_number_)
+
+**type** (_string_)
+
+
+--
+
+#### \<Gain />
+
+**amount** (_number_)
+
+
+--
+
+#### \<MoogFilter />
+
+**bufferSize** (_number_)
+
+**cutoff** (_number_)
+
+**resonance** (_number_)
+
+
+--
+
+#### \<Overdrive />
+
+**algorithmIndex** (_number_)
+
+**bypass** (_number_)
+
+**curveAmount** (_number_)
+
+**drive** (_number_)
+
+**outputGain** (_number_)
+
+--
+
+#### \<PingPong />
+
+**delayTimeLeft** (_number_)
+
+**delayTimeRight** (_number_)
+
+**feedback** (_number_)
+
+**wetLevel** (_number_)
+
+
+--
+
+#### \<Reverb />
+
+**bypass** (_number_)
+
+**dryLevel** (_number_)
+
+**highCut** (_number_)
+
+**impulse** (_string_)
+
+**level** (_number_)
+
+**lowCut** (_number_)
+
+**wetLevel** (_number_)
+
+
+### Special
+
+---
+
+#### \<Analyser />
+
+**fftSize** (_number_) : FFT Size value
+
+**onAudioProcess** (_function_) : Callback function with audio processing data
+
+**smoothingTimeConstant** (_number_) : Smoothing time constant
+
+--
+
+#### \<Bus />
+
+**gain** (_number_) : A number specifying Bus gain
+
+**id** (_string_) : Bus ID
+
+--
+
+#### \<LFO />
+
+**connect** (_function_) : LFO property selection function
+
+**frequency** (_number_) : LFO frequency
+
+**gain** (_number_) : A number specifying LFO gain
+
+**type** (_string_) : Oscillator type. Accepts `square`, `triangle`, `sawtooth` & `sine`
+
 
 ## Known Issues & Roadmap
 
 - Currently only the 4/4 time signature is supported
 - Hot reloading doesn't work
-- Post mount prop updates don't propagate to the parent song
-- The viz will be decoupled from the `Song` component, with an external API
-- `Synth` components need a filter prop
 - `Synth` presets need to be added
 - Record/Ouput audio file
 - Optional working mixing board alongside viz
-- Monophonic/Polyphonic prop settings and sample trigger modes
-- Note based detuning for Sampler
 - Sampler sample maps
+
 
 ## License
 

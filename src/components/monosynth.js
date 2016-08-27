@@ -1,5 +1,4 @@
 // @flow
-/* eslint-disable max-statements */
 import React, { PropTypes, Component } from 'react';
 import parser from 'note-parser';
 import contour from 'audio-contour';
@@ -17,6 +16,7 @@ type Props = {
   children: any;
   envelope: Envelope;
   gain?: number;
+  glide?: number;
   steps: Array<any>;
   transpose?: number;
   type: string;
@@ -33,11 +33,13 @@ type Context = {
   tempo: number;
 };
 
-export default class Synth extends Component {
+export default class Monosynth extends Component {
+  amplitudeGain: Object;
   connectNode: Object;
   context: Context;
+  id: String;
   getSteps: Function;
-  id: string;
+  osc: Object;
   playStep: Function;
   props: Props;
   static displayName = 'Synth';
@@ -51,6 +53,7 @@ export default class Synth extends Component {
       release: PropTypes.number,
     }),
     gain: PropTypes.number,
+    glide: PropTypes.number,
     steps: PropTypes.array.isRequired,
     transpose: PropTypes.number,
     type: PropTypes.string.isRequired,
@@ -63,6 +66,7 @@ export default class Synth extends Component {
       release: 0.2,
     },
     gain: 0.5,
+    glide: 0.1,
     transpose: 0,
   };
   static contextTypes = {
@@ -105,13 +109,29 @@ export default class Synth extends Component {
     this.id = uuid.v1();
     const master = this.context.getMaster();
     master.instruments[this.id] = this.getSteps;
-  }
-  componentWillReceiveProps(nextProps: Props) {
-    this.connectNode.gain.value = nextProps.gain;
+
+    this.amplitudeGain = this.context.audioContext.createGain();
+    this.amplitudeGain.gain.value = 0;
+    this.amplitudeGain.connect(this.connectNode);
+
+    this.osc = this.context.audioContext.createOscillator();
+    this.osc.type = this.props.type;
+    this.osc.connect(this.amplitudeGain);
+
+    if (this.props.busses) {
+      this.props.busses.forEach((bus) => {
+        if (master.busses[bus]) {
+          this.osc.connect(master.busses[bus]);
+        }
+      });
+    }
+
+    this.osc.start(this.context.audioContext.currentTime);
   }
   componentWillUnmount() {
     const master = this.context.getMaster();
     delete master.instruments[this.id];
+    this.osc.stop();
     this.connectNode.disconnect();
   }
   getSteps(playbackTime: number) {
@@ -120,20 +140,28 @@ export default class Synth extends Component {
     for (let i = 0; i < loopCount; i++) {
       const barOffset = ((this.context.barInterval * this.context.bars) * i) / 1000;
       const stepInterval = this.context.barInterval / this.context.resolution;
-      this.props.steps.forEach((step) => {
+      this.props.steps.forEach((step, index) => {
         const time = barOffset + ((step[0] * stepInterval) / 1000);
+        let glide = false;
+
+        if (index !== 0) {
+          const lastTime = barOffset + ((this.props.steps[index - 1][0] * stepInterval) / 1000);
+          const lastDuration = (this.props.steps[index - 1][1] * stepInterval) / 1000;
+          glide = lastTime + lastDuration > time;
+        }
 
         this.context.scheduler.insert(playbackTime + time, this.playStep, {
           time: playbackTime,
           step,
+          glide,
         });
       });
     }
   }
-  createOscillator(time: number, note: string, duration: number) {
-    const amplitudeGain = this.context.audioContext.createGain();
-    amplitudeGain.gain.value = 0;
-    amplitudeGain.connect(this.connectNode);
+  createOscillator() {
+    const [ time, note, duration, glide ] = arguments;
+    const transposed = note.slice(0, -1) +
+      (parseInt(note[note.length - 1], 0) + parseInt(this.props.transpose, 0));
 
     const env = contour(this.context.audioContext, {
       attack: this.props.envelope.attack,
@@ -142,44 +170,20 @@ export default class Synth extends Component {
       release: this.props.envelope.release,
     });
 
-    env.connect(amplitudeGain.gain);
+    env.connect(this.amplitudeGain.gain);
+    this.osc.frequency.setTargetAtTime(
+      parser.freq(transposed), time, glide ? this.props.glide : 0.001
+    );
 
-    const osc = this.context.audioContext.createOscillator();
-    const transposed = note.slice(0, -1) +
-      (parseInt(note[note.length - 1], 0) + parseInt(this.props.transpose, 0));
-
-    osc.frequency.value = parser.freq(transposed);
-    osc.type = this.props.type;
-    osc.connect(amplitudeGain);
-
-    if (this.props.busses) {
-      const master = this.context.getMaster();
-      this.props.busses.forEach((bus) => {
-        if (master.busses[bus]) {
-          osc.connect(master.busses[bus]);
-        }
-      });
-    }
-
-    osc.start(time);
     env.start(time);
-
-    const finish = env.stop(this.context.audioContext.currentTime + duration);
-    osc.stop(finish);
+    env.stop(this.context.audioContext.currentTime + duration);
   }
   playStep(e: Object) {
-    const { step, time } = e.args;
-    const notes = step[2];
+    const { step, glide, time } = e.args;
+    const note = step[2];
     const stepInterval = this.context.barInterval / this.context.resolution;
     const duration = (step[1] * stepInterval) / 1000;
-
-    if (Array.isArray(notes)) {
-      notes.forEach((n) => {
-        this.createOscillator(time, n, duration);
-      });
-    } else {
-      this.createOscillator(time, notes, duration);
-    }
+    this.createOscillator(time, note, duration, glide);
   }
   render(): React.Element<any> {
     return <span>{this.props.children}</span>;
