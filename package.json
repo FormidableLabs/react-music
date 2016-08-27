@@ -8,7 +8,7 @@
     "umd"
   ],
   "scripts": {
-    "start": "webpack-dev-server --inline --port 3000 --config webpack.config.dev.js --content-base public/",
+    "start": "webpack-dev-server --hot --inline --port 3000 --config webpack.config.dev.js --content-base public/",
     "build": "babel src -d lib --copy-files",
     "clean": "rimraf dist",
     "clean-umd": "rimraf umd",
@@ -52,6 +52,7 @@
     "postcss-loader": "^0.10.1",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "react-hot-loader": "^3.0.0-beta.2",
     "rimraf": "^2.5.4",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.1",
