@@ -2,11 +2,21 @@
 /* eslint-disable no-restricted-syntax */
 import React, { PropTypes, Component } from 'react';
 
+type BiquadFilterType =
+  'lowpass' |
+  'highpass' |
+  'bandpass' |
+  'lowshelf' |
+  'highshelf' |
+  'peaking' |
+  'notch' |
+  'allpass';
+
 type Props = {
   children?: any;
   frequency?: number;
   gain?: number;
-  type?: string;
+  type?: BiquadFilterType;
 };
 
 type Context = {
@@ -23,7 +33,16 @@ export default class Filter extends Component {
     children: PropTypes.node,
     frequency: PropTypes.number,
     gain: PropTypes.number,
-    type: PropTypes.string,
+    type: PropTypes.oneOf([
+      'lowpass',
+      'highpass',
+      'bandpass',
+      'lowshelf',
+      'highshelf',
+      'peaking',
+      'notch',
+      'allpass',
+    ]),
   };
   static defaultProps = {
     frequency: 2000,
