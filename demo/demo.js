@@ -19,6 +19,7 @@ export default class Demo extends Component {
 
     this.state = {
       playing: true,
+      downloadLinkVisible: false,
     };
 
     this.handleAudioProcess = this.handleAudioProcess.bind(this);
@@ -32,12 +33,34 @@ export default class Demo extends Component {
       playing: !this.state.playing,
     });
   }
+
+  handleRecordStop(blob, fileName) {
+    this.setState({
+      downloadLinkVisible: true,
+    }, () => {
+      const url = URL.createObjectURL(blob);
+      const anchor = this.refs.downloadLink;
+      anchor.href = url;
+      anchor.download = new Date().toISOString() + '.wav';
+    });
+  }
+  renderDownloadLink() {
+    if (!this.state.downloadLinkVisible) {
+      return null;
+    }
+
+    return (
+      <a ref="downloadLink" className="react-music-download-link">Download</a>
+    );
+  }
   render() {
     return (
       <div>
         <Song
           playing={this.state.playing}
           tempo={90}
+          record
+          onRecordStop={this.handleRecordStop.bind(this)}
         >
           <Analyser onAudioProcess={this.handleAudioProcess}>
             <Sequencer
@@ -94,6 +117,7 @@ export default class Demo extends Component {
 
         <Visualization ref={(c) => { this.visualization = c; }} />
 
+        {this.state.downloadLinkVisible && this.renderDownloadLink()}
         <button
           className="react-music-button"
           type="button"

@@ -2,11 +2,14 @@
 /* eslint-disable no-loop-func, react/no-did-mount-set-state */
 import React, { Component, PropTypes } from 'react';
 import Scheduler from '../utils/scheduler';
+import Recorder from '../utils/recorder';
 
 type Props = {
   children?: any;
   playing?: boolean;
+  record?: boolean;
   tempo: number;
+  onRecordStop: func;
 };
 
 export default class Song extends Component {
@@ -27,10 +30,13 @@ export default class Song extends Component {
     children: PropTypes.node,
     playing: PropTypes.bool,
     tempo: PropTypes.number,
+    record: PropTypes.bool,
+    onRecordStop: PropTypes.func,
   };
   static defaultProps = {
     playing: false,
     tempo: 90,
+    record: false,
   };
   static childContextTypes = {
     audioContext: PropTypes.object,
@@ -43,7 +49,6 @@ export default class Song extends Component {
   };
   constructor(props: Props) {
     super(props);
-
     this.state = {
       buffersLoaded: false,
     };
@@ -61,10 +66,17 @@ export default class Song extends Component {
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     this.audioContext = new AudioContext();
+    this.destination = this.audioContext.destination;
 
     this.scheduler = new Scheduler({
       context: this.audioContext,
     });
+
+    if (props.record) {
+      this.recorder = new Recorder(this.audioContext, props.onRecordStop);
+      this.recorder.processor.connect(this.destination);
+      this.destination = this.recorder.processor;
+    }
   }
   getChildContext(): Object {
     return {
@@ -72,11 +84,12 @@ export default class Song extends Component {
       audioContext: this.audioContext,
       barInterval: this.barInterval,
       bufferLoaded: this.bufferLoaded,
-      connectNode: this.audioContext.destination,
+      connectNode: this.destination,
       getMaster: this.getMaster,
       scheduler: this.scheduler,
     };
   }
+
   componentDidMount() {
     if (Object.keys(this.buffers).length === 0) {
       this.setState({
@@ -85,6 +98,9 @@ export default class Song extends Component {
     }
   }
   componentWillReceiveProps(nextProps: Props) {
+    if (this.recorder.recording && !nextProps.playing) {
+      this.recorder.stop();
+    }
     this.barInterval = (60000 / nextProps.tempo) * 4;
   }
   componentDidUpdate(prevProps: Object, prevState: Object) {
