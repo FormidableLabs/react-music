@@ -192,7 +192,7 @@ You know whats bananas? LFO. Thats what. You can use an oscillator to modify pro
       [8, 2, ["c3", "d#3", "f4"]]
     ]}
   >
-    <LF0
+    <LFO
       type="sine"
       frequency={0.05}
       connect={(c) => c.gain}
