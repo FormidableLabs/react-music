@@ -12,6 +12,8 @@ type Envelope = {
   release?: number;
 };
 
+type OscillatorType = 'sine' | 'square' | 'sawtooth' | 'triangle';
+
 type Props = {
   busses: Array<string>;
   children: any;
@@ -19,7 +21,7 @@ type Props = {
   gain?: number;
   steps: Array<any>;
   transpose?: number;
-  type: string;
+  type: OscillatorType;
 };
 
 type Context = {
@@ -53,7 +55,7 @@ export default class Synth extends Component {
     gain: PropTypes.number,
     steps: PropTypes.array.isRequired,
     transpose: PropTypes.number,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['sine', 'square', 'sawtooth', 'triangle']).isRequired,
   };
   static defaultProps = {
     envelope: {
@@ -185,4 +187,3 @@ export default class Synth extends Component {
     return <span>{this.props.children}</span>;
   }
 }
-
