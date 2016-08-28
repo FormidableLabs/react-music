@@ -100,7 +100,7 @@ export default class Song extends Component {
     }
   }
   componentWillUnmount() {
-    this.context.close();
+    this.audioContext.close();
   }
   getMaster(): Object {
     return this;
