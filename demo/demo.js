@@ -58,7 +58,6 @@ export default class Demo extends Component {
               bars={2}
             >
               <Polysynth
-                type="sine"
                 steps={[
                   [0, 1, ['c3', 'd#3', 'g3' ]],
                   [2, 1, ['c4']],
