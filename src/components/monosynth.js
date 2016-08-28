@@ -11,6 +11,8 @@ type Envelope = {
   release?: number;
 };
 
+type OscillatorType = 'sine' | 'square' | 'sawtooth' | 'triangle';
+
 type Props = {
   busses: Array<string>;
   children: any;
@@ -19,7 +21,7 @@ type Props = {
   glide?: number;
   steps: Array<any>;
   transpose?: number;
-  type: string;
+  type: OscillatorType;
 };
 
 type Context = {
@@ -56,7 +58,7 @@ export default class Monosynth extends Component {
     glide: PropTypes.number,
     steps: PropTypes.array.isRequired,
     transpose: PropTypes.number,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['sine', 'square', 'sawtooth', 'triangle']).isRequired,
   };
   static defaultProps = {
     envelope: {
@@ -189,4 +191,3 @@ export default class Monosynth extends Component {
     return <span>{this.props.children}</span>;
   }
 }
-

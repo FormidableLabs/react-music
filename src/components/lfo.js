@@ -1,12 +1,14 @@
 // @flow
 import React, { PropTypes, Component } from 'react';
 
+type OscillatorType = 'sine' | 'square' | 'sawtooth' | 'triangle';
+
 type Props = {
   children?: any;
   connect: Function;
   frequency?: number;
   gain?: number;
-  type?: string;
+  type?: OscillatorType;
 };
 
 type Context = {
@@ -25,7 +27,7 @@ export default class LFO extends Component {
     connect: PropTypes.func,
     frequency: PropTypes.number,
     gain: PropTypes.number,
-    type: PropTypes.string,
+    type: PropTypes.oneOf(['sine', 'square', 'sawtooth', 'triangle']),
   };
   static defaultProps = {
     connect: (node) => node.gain,
@@ -56,4 +58,3 @@ export default class LFO extends Component {
     return <span>{this.props.children}</span>;
   }
 }
-
