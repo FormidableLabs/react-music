@@ -158,7 +158,7 @@ Next, wrap your bus with the effect chain you want to make available, similarly 
 
 ```js
 <Song tempo={90}>
-  <Delay dryValue={0}>
+  <Delay dryLevel={0}>
     <Bus id="myBus"/>
   </Delay>
 </Song>
@@ -168,7 +168,7 @@ Finally, to hook an instrument up to your bus, or several busses, add their id's
 
 ```js
 <Song tempo={90}>
-  <Delay dryValue={0}>
+  <Delay dryLevel={0}>
     <Bus id="myBus"/>
   </Delay>
   <Sampler
