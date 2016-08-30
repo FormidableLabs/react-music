@@ -1,6 +1,6 @@
 // Much inspired by http://typedarray.org/from-microphone-to-wav-with-getusermedia-and-web-audio
 
-export function mergeBuffers(channelBuffer, recordingLength) {
+export const mergeBuffers = function (channelBuffer, recordingLength) {
   const result = new Float32Array(recordingLength);
   let offset = 0;
   const lng = channelBuffer.length;
@@ -10,9 +10,9 @@ export function mergeBuffers(channelBuffer, recordingLength) {
     offset += buffer.length;
   }
   return result;
-}
+};
 
-export function interleave(leftChannel, rightChannel) {
+export const interleave = function (leftChannel, rightChannel) {
   const length = leftChannel.length + rightChannel.length;
   const result = new Float32Array(length);
 
@@ -24,10 +24,18 @@ export function interleave(leftChannel, rightChannel) {
     inputIndex++;
   }
   return result;
-}
+};
 
+const writeUTFBytes = function (view, offset, string) {
+  const lng = string.length;
+  for (let i = 0; i < lng; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
+};
 
-export function getWAV(interleaved, sampleRate) {
+// Disabling since it's a higly specialised function
+/* eslint-disable max-statements */
+export const getWAV = function (interleaved, sampleRate) {
   // create the buffer and view to create the .WAV file
   const buffer = new ArrayBuffer(44 + interleaved.length * 2);
   const view = new DataView(buffer);
@@ -62,11 +70,4 @@ export function getWAV(interleaved, sampleRate) {
 
   // our final binary blob that we can hand off
   return new Blob([view], { type: 'audio/wav' });
-}
-
-function writeUTFBytes(view, offset, string) {
-  const lng = string.length;
-  for (let i = 0; i < lng; i++) {
-    view.setUint8(offset + i, string.charCodeAt(i));
-  }
-}
+};

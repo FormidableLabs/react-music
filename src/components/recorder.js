@@ -1,8 +1,27 @@
+// @flow
 import React, { PropTypes, Component } from 'react';
 import { getWAV, interleave, mergeBuffers } from '../utils/recorder';
 
-// @flow
+type Props = {
+  children?: any;
+  onRecordStop?: Function;
+  smoothingTimeConstant?: number;
+  isRecording?: boolean
+};
+
+type Context = {
+  audioContext: Object;
+  connectNode: Object;
+};
+
 export default class Recorder extends Component {
+  context: Context;
+  props: Props;
+  static propTypes = {
+    children: PropTypes.node,
+    isRecording: PropTypes.bool,
+    onRecordStop: PropTypes.func,
+  };
   static contextTypes = {
     audioContext: PropTypes.object,
     connectNode: PropTypes.object,
