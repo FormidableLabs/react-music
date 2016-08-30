@@ -1,5 +1,40 @@
 # Contributing to React-Music
 
+### Getting Started
+- Fork the repository from the [react-music](https://github.com/FormidableLabs/react-music) github page
+
+
+- Open your terminal and navigate using to where you want the project to live: 
+
+  For example, a folder named _projects_, `cd projects`
+
+- Clone the repository to your local machine: 
+
+  `git clone git@github.com:YOUR-GITHUB-USER-NAME/react-music.git` 
+  
+- Install react-music's development dependencies:
+
+  `cd react-music; npm install`
+  
+- Get coding!
+ 
+  `npm start`
+
+- When you are ready, commit your code with a detailed message of your changes and push your local branch up to the remote copy on github: <sub>_There is no testing suite implemented quite yet, so remember to make sure everything is working properly before committing_</sub> 
+
+  `git add .`
+  
+  `git commit -m "Changed the world using a drum machine`
+  
+  `git push -u origin master`
+  
+- Navigate to the fork located on your github page (https://github.com/YOUR-GITHUB-USER-NAME/react-music) and create a pull request for your changes
+
+- Be sure your pull request describes exactly what you have changed, if what you are changing is related to a posted issue, refer to it in the title like this: #ISSUE-NUM
+
+#### Thanks for your contribution! 
+
+
 ## Contributor Covenant Code of Conduct
 
 ### Our Pledge
