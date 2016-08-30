@@ -1,47 +1,6 @@
 // Much inspired by http://typedarray.org/from-microphone-to-wav-with-getusermedia-and-web-audio
 
-// @flow
-export default class Recorder {
-  constructor(context, onRecordStop) {
-    const bufferSize = 2048;
-    this.recording = true;
-    this.processor = context.createScriptProcessor(bufferSize, 2, 2);
-    this.processor.recordingLength = 0;
-    this.processor.leftChannel = [];
-    this.processor.rightChannel = [];
-    this.onRecordStop = onRecordStop;
-
-    this.processor.onaudioprocess = function (e) {
-      const left = e.inputBuffer.getChannelData(0);
-      const right = e.inputBuffer.getChannelData(1);
-      // we clone the samples
-      this.leftChannel.push(new Float32Array(left));
-      this.rightChannel.push(new Float32Array(right));
-      this.recordingLength += bufferSize;
-    }.bind(this.processor);
-
-    this.processor.stop = function () {
-      this.recording = false;
-      const left = mergeBuffers(this.processor.leftChannel, this.processor.recordingLength);
-      const right = mergeBuffers(this.processor.rightChannel, this.processor.recordingLength);
-      const interleavedChannels = interleave(left, right);
-      const blob = getWAV(interleavedChannels, context.sampleRate);
-
-      this.processor.disconnect();
-      this.onRecordStop(blob);
-    }.bind(this);
-  }
-
-  stop() {
-    this.processor.stop();
-  }
-
-  connect(node) {
-    this.processor.connect(node);
-  }
-}
-
-function mergeBuffers(channelBuffer, recordingLength) {
+export function mergeBuffers(channelBuffer, recordingLength) {
   const result = new Float32Array(recordingLength);
   let offset = 0;
   const lng = channelBuffer.length;
@@ -53,7 +12,7 @@ function mergeBuffers(channelBuffer, recordingLength) {
   return result;
 }
 
-function interleave(leftChannel, rightChannel) {
+export function interleave(leftChannel, rightChannel) {
   const length = leftChannel.length + rightChannel.length;
   const result = new Float32Array(length);
 
@@ -67,14 +26,8 @@ function interleave(leftChannel, rightChannel) {
   return result;
 }
 
-function writeUTFBytes(view, offset, string) {
-  const lng = string.length;
-  for (let i = 0; i < lng; i++) {
-    view.setUint8(offset + i, string.charCodeAt(i));
-  }
-}
 
-function getWAV(interleaved, sampleRate) {
+export function getWAV(interleaved, sampleRate) {
   // create the buffer and view to create the .WAV file
   const buffer = new ArrayBuffer(44 + interleaved.length * 2);
   const view = new DataView(buffer);
@@ -109,4 +62,11 @@ function getWAV(interleaved, sampleRate) {
 
   // our final binary blob that we can hand off
   return new Blob([view], { type: 'audio/wav' });
+}
+
+function writeUTFBytes(view, offset, string) {
+  const lng = string.length;
+  for (let i = 0; i < lng; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
 }

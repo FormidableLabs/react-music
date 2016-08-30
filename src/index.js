@@ -16,6 +16,7 @@ import Sequencer from './components/sequencer.js';
 import Sampler from './components/sampler.js';
 import Song from './components/song.js';
 import Synth from './components/synth.js';
+import Recorder from './components/recorder.js';
 
 export {
   Analyser,
@@ -36,4 +37,5 @@ export {
   Sampler,
   Song,
   Synth,
+  Recorder,
 };
