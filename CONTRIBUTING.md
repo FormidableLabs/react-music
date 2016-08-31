@@ -10,27 +10,35 @@
 
 - Clone the repository to your local machine: 
 
-  `git clone git@github.com:YOUR-GITHUB-USER-NAME/react-music.git` 
+```
+  git clone git@github.com:YOUR-GITHUB-USER-NAME/react-music.git
+```
   
 - Install react-music's development dependencies:
 
-  `cd react-music; npm install`
+```
+  cd react-music; npm install
+```
   
 - Get coding!
  
-  `npm start`
+```
+  npm start
+```
 
 - When you are ready, commit your code with a detailed message of your changes and push your local branch up to the remote copy on github: <sub>_There is no testing suite implemented quite yet, so remember to make sure everything is working properly before committing_</sub> 
 
-  `git add .`
+```
+  git add .
   
-  `git commit -m "Changed the world using a drum machine`
+  git commit -m "Changed the world using a drum machine"
   
-  `git push -u origin master`
+  git push -u origin master
+```
   
 - Navigate to the fork located on your github page (https://github.com/YOUR-GITHUB-USER-NAME/react-music) and create a pull request for your changes
 
-- Be sure your pull request describes exactly what you have changed, if what you are changing is related to a posted issue, refer to it in the title like this: #ISSUE-NUM
+- Be sure your pull request describes exactly what you have changed, if what you are changing is related to a posted issue, refer to it in the title like this: #ISSUE-NUMBER
 
 #### Thanks for your contribution! 
 
