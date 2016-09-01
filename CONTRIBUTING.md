@@ -6,6 +6,8 @@
 - [Contributing to the Docs](#contributing-to-the-docs)
 - [Report a Bug](#report-a-bug)
 - [Workshop an Idea](#workshop-an-idea)
+- [Contributor Covenant Code of Conduct](#contributor-covenant-code-of-conduct)
+
 <hr>
 
 ### Contributing to the code base
