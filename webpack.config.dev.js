@@ -3,7 +3,6 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: [
-    'react-hot-loader/patch',
     './demo/index',
   ],
   output: {
@@ -17,7 +16,7 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.js$/,
-      loader: 'babel?plugins=react-hot-loader/babel',
+      loaders: ['babel'],
       include: [
         path.join(__dirname, 'src'),
         path.join(__dirname, 'demo'),
