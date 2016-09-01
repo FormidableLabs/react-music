@@ -42,12 +42,20 @@ export default class Recorder extends Component {
     this.onRecordStop = props.onRecordStop;
 
     this.processor.onaudioprocess = (e) => {
-      const left = e.inputBuffer.getChannelData(0);
-      const right = e.inputBuffer.getChannelData(1);
+      const leftIn = e.inputBuffer.getChannelData(0);
+      const rightIn = e.inputBuffer.getChannelData(1);
       // we clone the samples
-      this.processor.leftChannel.push(new Float32Array(left));
-      this.processor.rightChannel.push(new Float32Array(right));
+      this.processor.leftChannel.push(new Float32Array(leftIn));
+      this.processor.rightChannel.push(new Float32Array(rightIn));
       this.processor.recordingLength += bufferSize;
+
+      // propagate samples to output
+      const leftOut = e.outputBuffer.getChannelData(0);
+      const rightOut = e.outputBuffer.getChannelData(1);
+      for (var i = 0; i < leftIn.length; i++) {
+        leftOut[i] = leftIn[i];
+        rightOut[i] = rightIn[i];
+      }
     };
 
     this.processor.stop = () => {
