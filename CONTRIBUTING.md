@@ -22,7 +22,10 @@ Done all that? Ok let's get crackin'...
 - [x] :fire: _Slap those keys to the beat_ :fire:
 - [x] Commit your code with a detailed message of your changes and push it up to remote! 
 
-<sub>There is no testing suite implemented quite yet, so remember to make sure everything is working properly before committing</sub> 
+````
+There is no testing suite implemented quite yet, so remember
+to make sure everything is working properly before committing
+```
   
 - [x] Create a PR from your fork! (https://github.com/YOUR-GITHUB-USER-NAME/react-music)
 
@@ -31,7 +34,7 @@ Be sure your pull request describes exactly what you have changed and why you ar
 Nice one, now gimme some knucks :punch:
 
 ### Contributing to the Docs
-Come one come all, are you a fluent english speaker? Cool, we could use you! Good tech is only good when people can figure it out, that's what makes clear documentation so important. If you see anywhere that could use a little sprucing, you could open a [new issue](https://github.com/FormidableLabs/react-music/issues) and chat it over. Or if you're feeling confident, dive right in. 
+Come one come all, are you some kind of living life form? Cool, we could use you! Good tech is only good when people can figure it out, that's what makes clear documentation so important. If you see anywhere that could use a little sprucing, you could open a [new issue](https://github.com/FormidableLabs/react-music/issues) and chat it over. Or if you're feeling confident, dive right in. 
 
 ### Report a Bug
 When you're writing code, you're writing bugs. They're out there. If you come across one, first check out the open and closed [issues](https://github.com/FormidableLabs/react-music/issues). If your problem isn't anywhere to be found, we'd love to hear about it. 
@@ -47,7 +50,10 @@ Heres a few tips to formatting your post when filing an issue
 - [x] **Context**: How has this issue affected you? What are you trying to accomplish?
 - [x] **Your Environment**: Include as many relevant details about the environment you experienced the bug in.
 
-<sub>Ex: Project version, Browser name & version, Operating system and version (desktop or mobile), Link to your project</sub>
+```
+Ex: Project version, Browser name & version, 
+Operating system and version (desktop or mobile), Link to your project
+```
 
 Of course, this is what the perfect world bug report would look like. If you come anywhere close to this, our feelings toward you would best be expressed in the words of the esteemed DJ Khaled... :musical_note:_["You smart, you loyal, you grateful. **I appreciate that**"](https://www.youtube.com/watch?v=Ll9nfNlDLII)_:musical_note:
 
