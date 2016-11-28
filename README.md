@@ -479,7 +479,6 @@ steps={[
 ## Known Issues & Roadmap
 
 - Currently only the 4/4 time signature is supported
-- Hot reloading doesn't work
 - `Synth` presets need to be added
 - Record/Ouput audio file
 - Optional working mixing board alongside viz
