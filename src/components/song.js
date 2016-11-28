@@ -43,7 +43,6 @@ export default class Song extends Component {
   };
   constructor(props: Props) {
     super(props);
-
     this.state = {
       buffersLoaded: false,
     };
@@ -77,6 +76,7 @@ export default class Song extends Component {
       scheduler: this.scheduler,
     };
   }
+
   componentDidMount() {
     if (Object.keys(this.buffers).length === 0) {
       this.setState({
