@@ -19,10 +19,12 @@ export default class Demo extends Component {
 
     this.state = {
       playing: true,
+      lightMode: true
     };
 
     this.handleAudioProcess = this.handleAudioProcess.bind(this);
     this.handlePlayToggle = this.handlePlayToggle.bind(this);
+    this.toggleLightMode = this.toggleLightMode.bind(this);
   }
   handleAudioProcess(analyser) {
     this.visualization.audioProcess(analyser);
@@ -32,9 +34,20 @@ export default class Demo extends Component {
       playing: !this.state.playing,
     });
   }
+  toggleLightMode(){
+    console.log('toggled');
+    this.setState({lightMode: !this.state.lightMode});
+  }
   render() {
     return (
-      <div>
+      <div style={this.state.lightMode ? {
+        paddingTop: '30px'
+      } : {
+        backgroundColor: '#000',
+        width: '100%',
+        height: '100%',
+        paddingTop: '30px'
+      }}>
         <Song
           playing={this.state.playing}
           tempo={90}
@@ -91,6 +104,14 @@ export default class Demo extends Component {
             </Sequencer>
           </Analyser>
         </Song>
+
+        <div style={{ textAlign: 'center' }}>
+          <p style={this.state.lightMode ? {color: 'black'} : {color: 'white'}}>Light Mode</p>
+          <label className="switch">
+            <input type="checkbox" onChange={this.toggleLightMode} checked={this.state.lightMode} />
+            <div className="slider round"></div>
+          </label>
+        </div>
 
         <Visualization ref={(c) => { this.visualization = c; }} />
 
