@@ -35,7 +35,6 @@ export default class Demo extends Component {
     });
   }
   toggleLightMode(){
-    console.log('toggled');
     this.setState({lightMode: !this.state.lightMode});
   }
   render() {
