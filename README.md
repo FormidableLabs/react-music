@@ -266,7 +266,7 @@ steps={[
 
 **gain** (_number_) : A number specifying instrument gain
 
-**sample** (_number_) : Step resolution for your sequence
+**sample** (_string_) : Path to an audio file
 
 **steps** (_array_) : Array of step indexes for the sample to be played at. Accepts arrays for steps in order to provide a second argument for index based detune (in between -12 & 12).
 
