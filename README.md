@@ -19,7 +19,7 @@
 - [LFO](#lfo)
 - [API](#api)
   - [Top Level](#top-level)
-  - [Intruments](#intruments)
+  - [Instruments](#instruments)
   - [Effects](#effects-1)
   - [Special](#special)
 - [Known Issues & Roadmap](#known-issues--roadmap)
@@ -221,7 +221,7 @@ You know whats bananas? LFO. Thats what. You can use an oscillator to modify pro
 
 **resolution** (_number_) : Step resolution for your sequence
 
-### Intruments
+### Instruments
 
 ---
 
