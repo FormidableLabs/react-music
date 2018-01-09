@@ -1,6 +1,7 @@
 // @flow
 /* eslint-disable no-restricted-syntax */
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 
 type BiquadFilterType =
   'lowpass' |

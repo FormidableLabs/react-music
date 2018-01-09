@@ -8,9 +8,7 @@ export default class Visualization extends Component {
   componentDidMount() {
     this.ctx = this.canvas.getContext('2d');
   }
-  componentDidReceiveProps() {
-
-  }
+  
   audioProcess(analyser) {
     if (this.ctx) {
       const gradient = this.ctx.createLinearGradient(0, 0, 0, 512);

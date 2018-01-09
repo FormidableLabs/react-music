@@ -24,12 +24,13 @@
   "dependencies": {
     "audio-contour": "0.0.1",
     "note-parser": "^2.0.0",
+    "prop-types": "^15.6.0",
     "tunajs": "^0.4.5",
     "uuid": "^2.0.2"
   },
   "peerDependencies": {
-    "react": "^15.2.1",
-    "react-dom": "^15.2.1"
+    "react": "^15.2.1 || ^16.0.0-0",
+    "react-dom": "^15.2.1 || ^16.0.0-0"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
@@ -50,8 +51,8 @@
     "flow-bin": "^0.31.1",
     "json-loader": "^0.5.4",
     "postcss-loader": "^0.10.1",
-    "react": "^15.2.1",
-    "react-dom": "^15.2.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-hot-loader": "^3.0.0-beta.2",
     "rimraf": "^2.5.4",
     "style-loader": "^0.13.1",

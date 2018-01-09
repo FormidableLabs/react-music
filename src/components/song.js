@@ -1,6 +1,7 @@
 // @flow
 /* eslint-disable no-loop-func, react/no-did-mount-set-state */
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import Scheduler from '../utils/scheduler';
 
 type Props = {
@@ -89,7 +90,7 @@ export default class Song extends Component {
   }
   componentDidUpdate(prevProps: Object, prevState: Object) {
     if (prevState.buffersLoaded !== this.state.buffersLoaded ||
-        prevProps.playing !== this.props.playing) {
+      prevProps.playing !== this.props.playing) {
       if (this.state.buffersLoaded === true && this.props.playing === true) {
         setTimeout(() => {
           this.scheduler.start(this.loop);
