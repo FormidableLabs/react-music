@@ -7,6 +7,7 @@ import Delay from './components/delay.js';
 import Filter from './components/filter.js';
 import Gain from './components/gain.js';
 import LFO from './components/lfo.js';
+import Mic from './components/mic.js';
 import Monosynth from './components/monosynth.js';
 import MoogFilter from './components/moog-filter.js';
 import Overdrive from './components/overdrive.js';
@@ -27,6 +28,7 @@ export {
   Filter,
   Gain,
   LFO,
+  Mic,
   MoogFilter,
   Monosynth,
   Overdrive,
