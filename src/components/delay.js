@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import Tuna from 'tunajs';
 
 type Props = {
-  bypass?: number;
+  bypass?: bool;
   children?: any;
   cutoff?: number;
   delayTime?: number;
@@ -24,7 +24,7 @@ export default class Delay extends Component {
   context: Context;
   props: Props;
   static propTypes = {
-    bypass: PropTypes.number,
+    bypass: PropTypes.bool,
     children: PropTypes.node,
     cutoff: PropTypes.number,
     delayTime: PropTypes.number,
@@ -33,7 +33,7 @@ export default class Delay extends Component {
     wetLevel: PropTypes.number,
   };
   static defaultProps = {
-    bypass: 0,
+    bypass: false,
     cutoff: 2000,
     delayTime: 150,
     dryLevel: 1,

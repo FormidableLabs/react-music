@@ -7,12 +7,11 @@ import Tuna from 'tunajs';
 type Props = {
   bypass?: bool;
   children?: any;
-  dryLevel?: number;
-  highCut?: number;
-  impulse?: string;
-  level?: number;
-  lowCut?: number;
-  wetLevel?: number;
+  baseModulationFrequency?: number,
+  stereoPhase?: number,
+  depth?: number,
+  feedback?: number,
+  rate?: number,
 };
 
 type Context = {
@@ -20,28 +19,26 @@ type Context = {
   connectNode: Object;
 };
 
-export default class Reverb extends Component {
+export default class Phaser extends Component {
   connectNode: Object;
   context: Context;
   props: Props;
   static propTypes = {
     bypass: PropTypes.bool,
     children: PropTypes.node,
-    dryLevel: PropTypes.number,
-    highCut: PropTypes.number,
-    impulse: PropTypes.string,
-    level: PropTypes.number,
-    lowCut: PropTypes.number,
-    wetLevel: PropTypes.number,
+    baseModulationFrequency: PropTypes.number,
+    stereoPhase: Proptypes.number,
+    depth: PropTypes.number,
+    feedback: PropTypes.number,
+    rate: PropTypes.number,
   };
   static defaultProps = {
-    bypass: false,
-    dryLevel: 0.5,
-    highCut: 22050,
-    impulse: 'reverb/room.wav',
-    level: 1,
-    lowCut: 20,
-    wetLevel: 1,
+    rate: 0.1,
+    depth: 0.6,
+    feedback: 0.7,
+    stereoPhase: 40,
+    baseModulationFrequency: 700,
+    bypass: false
   };
   static contextTypes = {
     audioContext: PropTypes.object,
@@ -56,14 +53,13 @@ export default class Reverb extends Component {
 
     const tuna = new Tuna(context.audioContext);
 
-    this.connectNode = new tuna.Convolver({
-      highCut: props.highCut,
-      lowCut: props.lowCut,
-      dryLevel: props.dryLevel,
-      wetLevel: props.wetLevel,
-      level: props.level,
-      impulse: props.impulse,
-      bypass: props.bypass,
+    this.connectNode = phaser = new tuna.Phaser({
+        rate: props.rate,
+        depth: props.depth,
+        feedback: props.feedback,
+        stereoPhase: props.stereoPhase,
+        baseModulationFrequency: props.baseModulationFrequency,
+        bypass: props.bypass
     });
 
     this.connectNode.connect(context.connectNode);

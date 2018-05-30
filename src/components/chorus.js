@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import Tuna from 'tunajs';
 
 type Props = {
-  bypass?: number;
+  bypass?: bool;
   children?: any;
   delay?: number;
   feedback?: number;
@@ -22,14 +22,14 @@ export default class Chorus extends Component {
   context: Context;
   props: Props;
   static propTypes = {
-    bypass: PropTypes.number,
+    bypass: PropTypes.bool,
     children: PropTypes.node,
     delay: PropTypes.number,
     feedback: PropTypes.number,
     rate: PropTypes.number,
   };
   static defaultProps = {
-    bypass: 0,
+    bypass: false,
     delay: 0.0045,
     feedback: 0.2,
     rate: 1.5,
