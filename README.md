@@ -42,7 +42,7 @@ That said, you can import the primitives yourself and run your own build setup i
 
 #### Song
 
-The first thing you want to do is create a `Song` component. This is the controller for your entire beat. It takes a `tempo` prop where you specify a BPM, and an `autoplay` prop that configures whether the song should play right away, or wait to press the play button. Set up it like so:
+The first thing you want to do is create a `Song` component. This is the controller for your entire beat. It takes a `tempo` prop where you specify a BPM, and an `playing` prop that configures whether the song should play right away, or wait to press the play button. Set up it like so:
 
 ```js
 <Song tempo={90}>
@@ -209,7 +209,7 @@ You know whats bananas? LFO. Thats what. You can use an oscillator to modify pro
 
 #### \<Song />
 
-**autoplay** (_boolean_) : Whether the song should start playing automatically
+**playing** (_boolean_) : Whether the song should start playing automatically
 
 **tempo** (_number_) : Your song tempo
 
