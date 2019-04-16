@@ -2,6 +2,7 @@ import Analyser from './components/analyser.js';
 import Bitcrusher from './components/bitcrusher.js';
 import Bus from './components/bus.js';
 import Chorus from './components/chorus.js';
+import Phaser from './components/phaser.js';
 import Compressor from './components/compressor.js';
 import Delay from './components/delay.js';
 import Filter from './components/filter.js';
@@ -22,6 +23,7 @@ export {
   Bus,
   Bitcrusher,
   Chorus,
+  Phaser,
   Compressor,
   Delay,
   Filter,

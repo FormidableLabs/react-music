@@ -6,7 +6,7 @@ import Tuna from 'tunajs';
 
 type Props = {
   algorithmIndex?: number;
-  bypass?: number;
+  bypass?: bool;
   children?: any;
   curveAmount?: number;
   drive?: number;
@@ -24,7 +24,7 @@ export default class Overdrive extends Component {
   props: Props;
   static propTypes = {
     algorithmIndex: PropTypes.number,
-    bypass: PropTypes.number,
+    bypass: PropTypes.bool,
     children: PropTypes.node,
     curveAmount: PropTypes.number,
     drive: PropTypes.number,
@@ -32,7 +32,7 @@ export default class Overdrive extends Component {
   };
   static defaultProps = {
     algorithmIndex: 0,
-    bypass: 0,
+    bypass: false,
     curveAmount: 1,
     drive: 0.7,
     outputGain: 0.5,
