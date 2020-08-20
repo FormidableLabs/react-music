@@ -213,7 +213,7 @@ You know whats bananas? LFO. Thats what. You can use an oscillator to modify pro
 
 #### \<Song />
 
-**playing** (_boolean_) : Whether the song should start playing automatically
+**playing** (_boolean_) : Whether the song should start playing automatically or not
 
 **tempo** (_number_) : Your song tempo
 
